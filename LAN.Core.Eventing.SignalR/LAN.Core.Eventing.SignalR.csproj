@@ -32,8 +32,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="LAN.Core.DependancyInjection">
-      <HintPath>..\packages\LAN.Core.DependancyInjection.1.0.6.0\lib\net45\LAN.Core.DependancyInjection.dll</HintPath>
+    <Reference Include="LAN.Core.DependencyInjection">
+      <HintPath>..\packages\LAN.Core.DependencyInjection.1.0.7.0\lib\net45\LAN.Core.DependencyInjection.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.AspNet.SignalR.Core">
       <HintPath>..\packages\Microsoft.AspNet.SignalR.Core.2.1.2\lib\net45\Microsoft.AspNet.SignalR.Core.dll</HintPath>

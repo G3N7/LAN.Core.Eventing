@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
-using LAN.Core.DependancyInjection;
+using LAN.Core.DependencyInjection;
 
 namespace LAN.Core.Eventing.SignalR
 {

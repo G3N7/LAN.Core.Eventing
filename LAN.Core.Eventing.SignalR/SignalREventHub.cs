@@ -2,7 +2,7 @@
 using System.Diagnostics;
 using System.Security.Authentication;
 using System.Threading.Tasks;
-using LAN.Core.DependancyInjection;
+using LAN.Core.DependencyInjection;
 using LAN.Core.Eventing.Server;
 using Microsoft.AspNet.SignalR;
 using Microsoft.AspNet.SignalR.Hubs;
