@@ -69,6 +69,7 @@
     <Compile Include="SignalRMessagingContext.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="LAN.Core.Eventing.SignalR.nuspec" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

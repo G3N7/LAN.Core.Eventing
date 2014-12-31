@@ -92,6 +92,9 @@
     <Compile Include="Server\OnErrorResponse.cs" />
     <Compile Include="Server\ServerEvents.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="LAN.Core.Eventing.nuspec" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

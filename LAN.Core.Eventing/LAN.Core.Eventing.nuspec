@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>$id$</id>
+    <version>$version$</version>
+    <title>$title$</title>
+    <authors>Mitch Ferrer</authors>
+    <owners>Mitch Ferrer</owners>
+    <licenseUrl>https://github.com/G3N7/LAN.Core.Eventing/blob/master/LICENSE</licenseUrl>
+    <projectUrl>https://github.com/G3N7/LAN.Core.Eventing</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>A simple eventing abstraction for C# to handle events with directionality.</description>
+    <copyright>Copyright 2014</copyright>
+    <tags>eventing c# events</tags>	
+  </metadata>
+</package>
