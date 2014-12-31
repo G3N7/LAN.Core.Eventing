@@ -14,7 +14,7 @@
     <tags>eventing c# signalr events</tags>
 	<dependencies>
 		<group>
-			<dependency id="LAN.Core.Eventing" version="1.3.2.0" />
+			<dependency id="LAN.Core.Eventing" version="1.3.3.0" />
 			<dependency id="LAN.Core.DependencyInjection" version="1.0.7.0" />
 			<dependency id="Microsoft.AspNet.SignalR.Core" version="2.1.2" />
 		</group>
