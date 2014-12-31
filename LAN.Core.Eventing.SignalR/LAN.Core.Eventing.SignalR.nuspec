@@ -12,12 +12,12 @@
     <description>A SignalR implementation of the LAN.Core.Eventing eventing abstraction for C# to handle events with directionality.</description>
     <copyright>Copyright 2014</copyright>
     <tags>eventing c# signalr events</tags>
-	<dependencies>
-		<group>
-			<dependency id="LAN.Core.Eventing" version="1.3.3.0" />
-			<dependency id="LAN.Core.DependencyInjection" version="1.0.7.0" />
-			<dependency id="Microsoft.AspNet.SignalR.Core" version="2.1.2" />
-		</group>
-	</dependencies>
-  </metadata>  
+    <dependencies>
+      <group>
+        <dependency id="LAN.Core.Eventing" version="1.3.3.0" />
+        <dependency id="LAN.Core.DependencyInjection" version="1.0.7.0" />
+        <dependency id="Microsoft.AspNet.SignalR.Core" version="2.1.2" />
+      </group>
+    </dependencies>
+  </metadata>
 </package>
