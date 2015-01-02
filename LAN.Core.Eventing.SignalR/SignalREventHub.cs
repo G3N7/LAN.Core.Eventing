@@ -44,12 +44,7 @@ namespace LAN.Core.Eventing.SignalR
 			}
 			catch (Exception ex)
 			{
-				var message = "";
-				if (Debugger.IsAttached)
-				{
-					message = Environment.NewLine + ex.Message;
-				}
-				SendError("Error Joining Groups" + message);
+				SendExceptionToClient("Error Joining Groups", ex);
 			}
 
 			return base.OnConnected();
@@ -70,13 +65,7 @@ namespace LAN.Core.Eventing.SignalR
 			}
 			catch (Exception ex)
 			{
-				var message = "";
-				if (Debugger.IsAttached)
-				{
-					message = Environment.NewLine + ex.Message;
-				}
-
-				SendError("Error Leaving Groups" + message);
+				SendExceptionToClient("Error Leaving Groups", ex);
 			}
 
 			return base.OnDisconnected(stopCalled);
@@ -94,8 +83,8 @@ namespace LAN.Core.Eventing.SignalR
 					var errorMessage = string.Format(
 						"The event {0} is not a known event, there are only a few things this could be, check that you have Registered the Handler with your HandlerRepository, that its registered with the event you are emitting {0}, and that all of the handler's dependancies are registered with your DI container.",
 						eventName);
-					SendError(errorMessage);
-					throw new SignalREventingException(errorMessage, new ArgumentException(errorMessage, "eventName"));
+					SendErrorToClient(errorMessage);
+					throw new ArgumentException(errorMessage, "eventName");
 				}
 
 				if (!handler.IsAuthorized(this.Context.User))
@@ -103,8 +92,8 @@ namespace LAN.Core.Eventing.SignalR
 					var errorMessage = string.Format(
 						"Auth: You are not authorized to use the event {0}.",
 						eventName);
-					SendError(errorMessage);
-					throw new SignalREventingException(errorMessage, new AuthenticationException(errorMessage));
+					SendErrorToClient(errorMessage);
+					throw new AuthenticationException(errorMessage);
 				}
 
 				var eventTask = InvokeHandlerAsync(handler, data);
@@ -114,24 +103,14 @@ namespace LAN.Core.Eventing.SignalR
 			}
 			catch (Exception ex)
 			{
-				var message = "";
-				if (Debugger.IsAttached)
-				{
-					message = Environment.NewLine + ex.ToString();
-				}
-				SendError("Unknown Error" + message);
+				SendExceptionToClient("An unknown error has occurred", ex);
+				throw new SignalREventingException("An unknown error has occurred", ex);
 			}
-		}
-
-		private void SendError(string message)
-		{
-			Debug.WriteLine("SignalR EventHub: Error: \n{0}", message);
-			this._messagingContext.PublishToClient(new EventName(ServerEvents.OnError), new OnErrorResponse(null) { CorrelationId = this.Context.ConnectionId, Message = message });
 		}
 
 		private void HandleErrorForAsyncHandler(Task handlerTask)
 		{
-			SendError(handlerTask.Exception == null ? "UnknownError" : handlerTask.Exception.GetBaseException().Message);
+			SendErrorToClient(handlerTask.Exception == null ? "UnknownError" : handlerTask.Exception.GetBaseException().Message);
 		}
 
 		private Task InvokeHandlerAsync(IHandler handler, JObject data)
@@ -142,6 +121,22 @@ namespace LAN.Core.Eventing.SignalR
 				var deserializedRequest = data.ToObject(handler.GetRequestType());
 				handler.Invoke((RequestBase)deserializedRequest, this.Context.User);
 			});
+		}
+
+		private void SendExceptionToClient(string baseMessage, Exception ex)
+		{
+			var message = "";
+			if (Debugger.IsAttached)
+			{
+				message = Environment.NewLine + ex.ToString();
+			}
+			SendErrorToClient(baseMessage + message);
+		}
+
+		private void SendErrorToClient(string message)
+		{
+			Debug.WriteLine("SignalR EventHub: Error: \n{0}", message);
+			this._messagingContext.PublishToClient(new EventName(ServerEvents.OnError), new OnErrorResponse(null) { CorrelationId = this.Context.ConnectionId, Message = message });
 		}
 	}
 }
