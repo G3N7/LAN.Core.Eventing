@@ -74,7 +74,7 @@ namespace LAN.Core.Eventing.SignalR
 			return base.OnDisconnected(stopCalled);
 		}
 
-		public event EventHandler<SignalRExceptionEventArgs> ExeptionOccured;
+		public static event EventHandler<SignalRExceptionEventArgs> ExeptionOccured;
 
 		protected virtual void OnExceptionOccured(SignalRExceptionEventArgs e)
 		{
