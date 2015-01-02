@@ -65,7 +65,7 @@
     <Compile Include="CamelCaseSignalRSerializer.cs" />
     <Compile Include="SignalREventHub.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SignalREventingException.cs" />
+    <Compile Include="SignalRExceptionEventArgs.cs" />
     <Compile Include="SignalRGroupService.cs" />
     <Compile Include="SignalRMessagingContext.cs" />
   </ItemGroup>

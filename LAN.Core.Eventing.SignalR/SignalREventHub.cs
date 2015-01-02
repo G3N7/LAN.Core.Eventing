@@ -6,6 +6,7 @@ using LAN.Core.DependencyInjection;
 using LAN.Core.Eventing.Server;
 using Microsoft.AspNet.SignalR;
 using Microsoft.AspNet.SignalR.Hubs;
+using Microsoft.AspNet.SignalR.Messaging;
 using Newtonsoft.Json.Linq;
 
 namespace LAN.Core.Eventing.SignalR
@@ -44,6 +45,7 @@ namespace LAN.Core.Eventing.SignalR
 			}
 			catch (Exception ex)
 			{
+				OnExceptionOccured(new SignalRExceptionEventArgs(ex));
 				SendExceptionToClient("Error Joining Groups", ex);
 			}
 
@@ -65,10 +67,22 @@ namespace LAN.Core.Eventing.SignalR
 			}
 			catch (Exception ex)
 			{
+				OnExceptionOccured(new SignalRExceptionEventArgs(ex));
 				SendExceptionToClient("Error Leaving Groups", ex);
 			}
 
 			return base.OnDisconnected(stopCalled);
+		}
+
+		public event EventHandler<SignalRExceptionEventArgs> ExeptionOccured;
+
+		protected virtual void OnExceptionOccured(SignalRExceptionEventArgs e)
+		{
+			EventHandler<SignalRExceptionEventArgs> handler = ExeptionOccured;
+			if (handler != null)
+			{
+				handler(this, e);
+			}
 		}
 
 		[HubMethodName("raiseEvent")]
@@ -103,14 +117,18 @@ namespace LAN.Core.Eventing.SignalR
 			}
 			catch (Exception ex)
 			{
+				OnExceptionOccured(new SignalRExceptionEventArgs(ex));
 				SendExceptionToClient("An unknown error has occurred", ex);
-				throw new SignalREventingException("An unknown error has occurred", ex);
 			}
 		}
 
 		private void HandleErrorForAsyncHandler(Task handlerTask)
 		{
-			SendErrorToClient(handlerTask.Exception == null ? "UnknownError" : handlerTask.Exception.GetBaseException().Message);
+			if (handlerTask.Exception == null) return; //this should never happen, since this will only be used for faulted tasks
+
+			var exception = handlerTask.Exception.GetBaseException();
+			OnExceptionOccured(new SignalRExceptionEventArgs(exception));
+			SendExceptionToClient("Handler Exception", exception);
 		}
 
 		private Task InvokeHandlerAsync(IHandler handler, JObject data)
