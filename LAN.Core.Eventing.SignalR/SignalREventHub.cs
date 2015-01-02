@@ -45,7 +45,7 @@ namespace LAN.Core.Eventing.SignalR
 			}
 			catch (Exception ex)
 			{
-				OnExceptionOccured(new SignalRExceptionEventArgs(ex));
+				OnExceptionOccurred(new SignalRExceptionEventArgs(ex));
 				SendExceptionToClient("Error Joining Groups", ex);
 			}
 
@@ -67,7 +67,7 @@ namespace LAN.Core.Eventing.SignalR
 			}
 			catch (Exception ex)
 			{
-				OnExceptionOccured(new SignalRExceptionEventArgs(ex));
+				OnExceptionOccurred(new SignalRExceptionEventArgs(ex));
 				SendExceptionToClient("Error Leaving Groups", ex);
 			}
 
@@ -76,7 +76,7 @@ namespace LAN.Core.Eventing.SignalR
 
 		public static event EventHandler<SignalRExceptionEventArgs> ExeptionOccured;
 
-		protected virtual void OnExceptionOccured(SignalRExceptionEventArgs e)
+		protected virtual void OnExceptionOccurred(SignalRExceptionEventArgs e)
 		{
 			EventHandler<SignalRExceptionEventArgs> handler = ExeptionOccured;
 			if (handler != null)
@@ -117,7 +117,7 @@ namespace LAN.Core.Eventing.SignalR
 			}
 			catch (Exception ex)
 			{
-				OnExceptionOccured(new SignalRExceptionEventArgs(ex));
+				OnExceptionOccurred(new SignalRExceptionEventArgs(ex));
 				SendExceptionToClient("An unknown error has occurred", ex);
 			}
 		}
@@ -127,7 +127,7 @@ namespace LAN.Core.Eventing.SignalR
 			if (handlerTask.Exception == null) return; //this should never happen, since this will only be used for faulted tasks
 
 			var exception = handlerTask.Exception.GetBaseException();
-			OnExceptionOccured(new SignalRExceptionEventArgs(exception));
+			OnExceptionOccurred(new SignalRExceptionEventArgs(exception));
 			SendExceptionToClient("Handler Exception", exception);
 		}
 
