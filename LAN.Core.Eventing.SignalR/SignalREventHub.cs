@@ -22,7 +22,7 @@ namespace LAN.Core.Eventing.SignalR
 
 		public SignalREventHub()
 		{
-			var container = ContainerRegistery.DefaultContainer;
+			var container = ContainerRegistry.DefaultContainer;
 			this._handlerRepository = container.GetInstance<IHandlerRepository>();
 			this._messagingContext = container.GetInstance<IMessagingContext>();
 			this._groupRegistrar = container.GetInstance<ISignalRGroupRegistrar>();
