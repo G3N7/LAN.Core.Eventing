@@ -31,10 +31,15 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>key.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
   <ItemGroup>
-    <Reference Include="LAN.Core.DependencyInjection, Version=1.1.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\LAN.Core.DependencyInjection.1.1.0.0\lib\net45\LAN.Core.DependencyInjection.dll</HintPath>
+    <Reference Include="LAN.Core.DependencyInjection">
+      <HintPath>..\packages\LAN.Core.DependencyInjection.1.1.1.0\lib\net45\LAN.Core.DependencyInjection.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.AspNet.SignalR.Core">
       <HintPath>..\packages\Microsoft.AspNet.SignalR.Core.2.1.2\lib\net45\Microsoft.AspNet.SignalR.Core.dll</HintPath>
@@ -71,6 +76,7 @@
     <Compile Include="SignalRMessagingContext.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="key.snk" />
     <None Include="LAN.Core.Eventing.SignalR.nuspec" />
     <None Include="packages.config" />
   </ItemGroup>
