@@ -18,13 +18,12 @@ namespace LAN.Core.Eventing
 			this.Invoke((TReq)req, (TPrincipal)principal);
 		}
 
-		public bool IsAuthorized(IPrincipal principal)
+		public bool IsAuthorized(RequestBase req, IPrincipal principal)
 		{
-			return this.IsAuthorized((TPrincipal)principal);
+			return this.IsAuthorized((TReq)req, (TPrincipal)principal);
 		}
 
-		protected abstract bool IsAuthorized(TPrincipal principal);
+		protected abstract bool IsAuthorized(TReq request, TPrincipal principal);
 		protected abstract void Invoke(TReq request, TPrincipal principal);
 	}
-
 }

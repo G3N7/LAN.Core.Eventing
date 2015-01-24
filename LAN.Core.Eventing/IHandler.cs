@@ -9,27 +9,29 @@ namespace LAN.Core.Eventing
 	{
 		Type GetRequestType();
 		void Invoke(RequestBase req, IPrincipal principal);
-		bool IsAuthorized(IPrincipal principal);
+		bool IsAuthorized(RequestBase req, IPrincipal principal);
 	}
 
 	[ContractClassFor(typeof(IHandler))]
-	abstract class ContractHandler: IHandler
+	abstract class ContractHandler : IHandler
 	{
-		public Type GetRequestType()
+		Type IHandler.GetRequestType()
 		{
 			Contract.Ensures(Contract.Result<Type>() != null);
 			throw new NotImplementedException();
 		}
 
-		public void Invoke(RequestBase req, IPrincipal principal)
+		void IHandler.Invoke(RequestBase req, IPrincipal principal)
 		{
 			Contract.Requires(req != null);
 			Contract.Requires(principal != null);
 			throw new NotImplementedException();
 		}
 
-		public bool IsAuthorized(IPrincipal principal)
+
+		bool IHandler.IsAuthorized(RequestBase req, IPrincipal principal)
 		{
+			Contract.Requires(req != null);
 			Contract.Requires(principal != null);
 			throw new NotImplementedException();
 		}

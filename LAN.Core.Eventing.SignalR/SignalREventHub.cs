@@ -100,8 +100,11 @@ namespace LAN.Core.Eventing.SignalR
 					SendErrorToClient(errorMessage);
 					throw new ArgumentException(errorMessage, "eventName");
 				}
+				
+				data.Add("correlationId", this.Context.ConnectionId);
+				var deserializedRequest = (RequestBase)data.ToObject(handler.GetRequestType());
 
-				if (!handler.IsAuthorized(this.Context.User))
+				if (!handler.IsAuthorized(deserializedRequest, this.Context.User))
 				{
 					var errorMessage = string.Format(
 						"Auth: You are not authorized to use the event {0}.",
@@ -110,7 +113,7 @@ namespace LAN.Core.Eventing.SignalR
 					throw new AuthenticationException(errorMessage);
 				}
 
-				var eventTask = InvokeHandlerAsync(handler, data);
+				var eventTask = InvokeHandlerAsync(handler, deserializedRequest);
 				eventTask.ContinueWith(HandleErrorForAsyncHandler, TaskContinuationOptions.OnlyOnFaulted);
 				eventTask.Start();
 				Debug.WriteLine("SignalR EventHub: {0} has raised {1} event", this.Context.User.Identity.Name, eventName);
@@ -131,14 +134,9 @@ namespace LAN.Core.Eventing.SignalR
 			SendExceptionToClient("Handler Exception", exception);
 		}
 
-		private Task InvokeHandlerAsync(IHandler handler, JObject data)
+		private Task InvokeHandlerAsync(IHandler handler, RequestBase deserializedRequest)
 		{
-			return new Task(() =>
-			{
-				data.Add("correlationId", this.Context.ConnectionId);
-				var deserializedRequest = data.ToObject(handler.GetRequestType());
-				handler.Invoke((RequestBase)deserializedRequest, this.Context.User);
-			});
+			return new Task(() => handler.Invoke(deserializedRequest, this.Context.User));
 		}
 
 		private void SendExceptionToClient(string baseMessage, Exception ex)
