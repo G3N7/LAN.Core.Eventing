@@ -1,9 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace LAN.Core.Eventing
 {
 	public class EventName
 	{
+		private readonly string _name;
+
 		public EventName(Enum eventEnumMember)
 		{
 			if (eventEnumMember == null) throw new ArgumentNullException("eventEnumMember");
@@ -11,8 +14,25 @@ namespace LAN.Core.Eventing
 			if (!enumName.Contains("Events")) throw new ArgumentException(string.Format("Event enums should end with Events as a matter of convention. (was {0})", enumName));
 			this._name = enumName.Replace("Events", "") + eventEnumMember;
 		}
+		
+		protected bool Equals(EventName other)
+		{
+			if (other == null) return false;
+			return string.Equals(_name, other._name);
+		}
 
-		private readonly string _name;
+		public override bool Equals(object obj)
+		{
+			if (ReferenceEquals(null, obj)) return false;
+			if (ReferenceEquals(this, obj)) return true;
+			if (obj.GetType() != this.GetType()) return false;
+			return Equals((EventName)obj);
+		}
+
+		public override int GetHashCode()
+		{
+			return (_name != null ? _name.GetHashCode() : 0);
+		}
 
 		public static implicit operator string(EventName eventName)
 		{
@@ -28,5 +48,34 @@ namespace LAN.Core.Eventing
 		{
 			return _name;
 		}
+		
+		#region Comparer
+
+		private sealed class NameEqualityComparer : IEqualityComparer<EventName>
+		{
+			public bool Equals(EventName x, EventName y)
+			{
+				if (ReferenceEquals(x, y)) return true;
+				if (ReferenceEquals(x, null)) return false;
+				if (ReferenceEquals(y, null)) return false;
+				if (x.GetType() != y.GetType()) return false;
+				return string.Equals(x._name, y._name);
+			}
+
+			public int GetHashCode(EventName obj)
+			{
+				return (obj._name != null ? obj._name.GetHashCode() : 0);
+			}
+		}
+
+		private static readonly IEqualityComparer<EventName> NameComparerInstance = new NameEqualityComparer();
+
+		public static IEqualityComparer<EventName> NameComparer
+		{
+			get { return NameComparerInstance; }
+		}
+
+		#endregion
+
 	}
 }

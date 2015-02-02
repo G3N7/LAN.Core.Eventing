@@ -14,6 +14,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{02E1E5
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LAN.Core.Eventing.SignalR", "LAN.Core.Eventing.SignalR\LAN.Core.Eventing.SignalR.csproj", "{F23A4D17-3F36-4254-984B-0031E25200B3}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LAN.Core.Eventing.Tests", "LAN.Core.Eventing.Tests\LAN.Core.Eventing.Tests.csproj", "{FE68280D-A8BE-42A6-83FB-B9B63B0E562E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -28,6 +30,10 @@ Global
 		{F23A4D17-3F36-4254-984B-0031E25200B3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F23A4D17-3F36-4254-984B-0031E25200B3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F23A4D17-3F36-4254-984B-0031E25200B3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FE68280D-A8BE-42A6-83FB-B9B63B0E562E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FE68280D-A8BE-42A6-83FB-B9B63B0E562E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FE68280D-A8BE-42A6-83FB-B9B63B0E562E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FE68280D-A8BE-42A6-83FB-B9B63B0E562E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
