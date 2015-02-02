@@ -6,7 +6,6 @@ using LAN.Core.DependencyInjection;
 using LAN.Core.Eventing.Server;
 using Microsoft.AspNet.SignalR;
 using Microsoft.AspNet.SignalR.Hubs;
-using Microsoft.AspNet.SignalR.Messaging;
 using Newtonsoft.Json.Linq;
 
 namespace LAN.Core.Eventing.SignalR
@@ -45,7 +44,7 @@ namespace LAN.Core.Eventing.SignalR
 			}
 			catch (Exception ex)
 			{
-				OnExceptionOccurred(new SignalRExceptionEventArgs(ex));
+				OnExceptionOccurred(new SignalRExceptionEventArgs(ex, this.Context.ConnectionId));
 				SendExceptionToClient("Error Joining Groups", ex);
 			}
 
@@ -67,7 +66,7 @@ namespace LAN.Core.Eventing.SignalR
 			}
 			catch (Exception ex)
 			{
-				OnExceptionOccurred(new SignalRExceptionEventArgs(ex));
+				OnExceptionOccurred(new SignalRExceptionEventArgs(ex, this.Context.ConnectionId));
 				SendExceptionToClient("Error Leaving Groups", ex);
 			}
 
@@ -120,7 +119,7 @@ namespace LAN.Core.Eventing.SignalR
 			}
 			catch (Exception ex)
 			{
-				OnExceptionOccurred(new SignalRExceptionEventArgs(ex));
+				OnExceptionOccurred(new SignalRExceptionEventArgs(ex, this.Context.ConnectionId));
 				SendExceptionToClient("An unknown error has occurred", ex);
 			}
 		}
@@ -130,7 +129,7 @@ namespace LAN.Core.Eventing.SignalR
 			if (handlerTask.Exception == null) return; //this should never happen, since this will only be used for faulted tasks
 
 			var exception = handlerTask.Exception.GetBaseException();
-			OnExceptionOccurred(new SignalRExceptionEventArgs(exception));
+			OnExceptionOccurred(new SignalRExceptionEventArgs(exception, this.Context.ConnectionId));
 			SendExceptionToClient("Handler Exception", exception);
 		}
 
