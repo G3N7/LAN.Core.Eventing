@@ -44,7 +44,7 @@ namespace LAN.Core.Eventing.SignalR
 			}
 			catch (Exception ex)
 			{
-				OnExceptionOccurred(new SignalRExceptionEventArgs(ex, this.Context.ConnectionId));
+				OnExceptionOccurred(new SignalRExceptionEventArgs(this.Context.User, ex, this.Context.ConnectionId));
 				SendExceptionToClient("Error Joining Groups", ex);
 			}
 
@@ -66,22 +66,21 @@ namespace LAN.Core.Eventing.SignalR
 			}
 			catch (Exception ex)
 			{
-				OnExceptionOccurred(new SignalRExceptionEventArgs(ex, this.Context.ConnectionId));
+				OnExceptionOccurred(new SignalRExceptionEventArgs(this.Context.User, ex, this.Context.ConnectionId));
 				SendExceptionToClient("Error Leaving Groups", ex);
 			}
 
 			return base.OnDisconnected(stopCalled);
 		}
 
-		public static event EventHandler<SignalRExceptionEventArgs> ExceptionOccured;
 
-		protected virtual void OnExceptionOccurred(SignalRExceptionEventArgs e)
 		{
-			EventHandler<SignalRExceptionEventArgs> handler = ExceptionOccured;
-			if (handler != null)
-			{
-				handler(this, e);
-			}
+		public static event EventHandler<SignalRExceptionEventArgs> ExceptionOccurred;
+
+		private static void OnExceptionOccurred(SignalRExceptionEventArgs e)
+		{
+			EventHandler<SignalRExceptionEventArgs> handler = ExceptionOccurred;
+			if (handler != null) handler(null, e);
 		}
 
 		[HubMethodName("raiseEvent")]
@@ -99,7 +98,7 @@ namespace LAN.Core.Eventing.SignalR
 					SendErrorToClient(errorMessage);
 					throw new ArgumentException(errorMessage, "eventName");
 				}
-				
+
 				data.Add("correlationId", this.Context.ConnectionId);
 				var deserializedRequest = (RequestBase)data.ToObject(handler.GetRequestType());
 
@@ -119,7 +118,7 @@ namespace LAN.Core.Eventing.SignalR
 			}
 			catch (Exception ex)
 			{
-				OnExceptionOccurred(new SignalRExceptionEventArgs(ex, this.Context.ConnectionId));
+				OnExceptionOccurred(new SignalRExceptionEventArgs(this.Context.User, ex, this.Context.ConnectionId));
 				SendExceptionToClient("An unknown error has occurred", ex);
 			}
 		}
@@ -129,7 +128,7 @@ namespace LAN.Core.Eventing.SignalR
 			if (handlerTask.Exception == null) return; //this should never happen, since this will only be used for faulted tasks
 
 			var exception = handlerTask.Exception.GetBaseException();
-			OnExceptionOccurred(new SignalRExceptionEventArgs(exception, this.Context.ConnectionId));
+			OnExceptionOccurred(new SignalRExceptionEventArgs(this.Context.User, exception, this.Context.ConnectionId));
 			SendExceptionToClient("Handler Exception", exception);
 		}
 
