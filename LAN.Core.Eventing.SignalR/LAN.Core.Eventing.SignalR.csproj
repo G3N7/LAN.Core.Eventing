@@ -66,14 +66,18 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DIHandlerRepository.cs" />
+    <Compile Include="ISignalRConnectionLookupService.cs" />
     <Compile Include="ISignalRGroupRegistrar.cs" />
     <Compile Include="ISignalRSerializer.cs" />
     <Compile Include="CamelCaseSignalRSerializer.cs" />
+    <Compile Include="SignalRConnectionLookupService.cs" />
     <Compile Include="SignalREventHub.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SignalRExceptionEventArgs.cs" />
     <Compile Include="SignalRGroupService.cs" />
     <Compile Include="SignalRMessagingContext.cs" />
+    <Compile Include="SignalRUserConnectedEventArgs.cs" />
+    <Compile Include="SignalRUserDisconnectedEventArgs.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="key.snk" />

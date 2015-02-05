@@ -41,6 +41,7 @@ namespace LAN.Core.Eventing.SignalR
 					this._groupJoinService.JoinToGroup(groupToJoin, this.Context.ConnectionId);
 					Debug.WriteLine("SignalR EventHub: {0} has joined group {1}", username, groupToJoin);
 				}
+				OnUserConnected(new SignalRUserConnectedEventArgs(this.Context.User, this.Context.ConnectionId));
 			}
 			catch (Exception ex)
 			{
@@ -63,6 +64,7 @@ namespace LAN.Core.Eventing.SignalR
 					this._groupLeaveService.LeaveGroup(groupToJoin, this.Context.ConnectionId);
 					Debug.WriteLine("SignalR EventHub: {0} has left group {1}", username, groupToJoin);
 				}
+				OnUserDisconnected(new SignalRUserDisconnectedEventArgs(this.Context.User, this.Context.ConnectionId));
 			}
 			catch (Exception ex)
 			{
@@ -73,8 +75,22 @@ namespace LAN.Core.Eventing.SignalR
 			return base.OnDisconnected(stopCalled);
 		}
 
+		public static event EventHandler<SignalRUserConnectedEventArgs> UserConnected;
 
+		private static void OnUserConnected(SignalRUserConnectedEventArgs e)
 		{
+			EventHandler<SignalRUserConnectedEventArgs> handler = UserConnected;
+			if (handler != null) handler(null, e);
+		}
+
+		public static event EventHandler<SignalRUserDisconnectedEventArgs> UserDisconnected;
+
+		private static void OnUserDisconnected(SignalRUserDisconnectedEventArgs e)
+		{
+			EventHandler<SignalRUserDisconnectedEventArgs> handler = UserDisconnected;
+			if (handler != null) handler(null, e);
+		}
+
 		public static event EventHandler<SignalRExceptionEventArgs> ExceptionOccurred;
 
 		private static void OnExceptionOccurred(SignalRExceptionEventArgs e)
