@@ -21,82 +21,13 @@ namespace LAN.Core.Eventing.SignalR
 
 		public SignalREventHub()
 		{
+			if (ContainerRegistry.DefaultContainer == null) throw new Exception("You have not set the default container.  ContainerRegistry.DefaultContainer");
 			var container = ContainerRegistry.DefaultContainer;
 			this._handlerRepository = container.GetInstance<IHandlerRepository>();
 			this._messagingContext = container.GetInstance<IMessagingContext>();
 			this._groupRegistrar = container.GetInstance<ISignalRGroupRegistrar>();
 			this._groupJoinService = container.GetInstance<IGroupJoinService>();
 			this._groupLeaveService = container.GetInstance<IGroupLeaveService>();
-		}
-
-		public override Task OnConnected()
-		{
-			var username = this.Context.User.Identity.Name;
-			if (!this.Context.User.Identity.IsAuthenticated) return base.OnConnected();
-			try
-			{
-				var groupsToJoin = this._groupRegistrar.GetGroupsForUser(username);
-				foreach (var groupToJoin in groupsToJoin.Result)
-				{
-					this._groupJoinService.JoinToGroup(groupToJoin, this.Context.ConnectionId);
-					Debug.WriteLine("SignalR EventHub: {0} has joined group {1}", username, groupToJoin);
-				}
-				OnUserConnected(new SignalRUserConnectedEventArgs(this.Context.User, this.Context.ConnectionId));
-			}
-			catch (Exception ex)
-			{
-				OnExceptionOccurred(new SignalRExceptionEventArgs(this.Context.User, ex, this.Context.ConnectionId));
-				SendExceptionToClient("Error Joining Groups", ex);
-			}
-
-			return base.OnConnected();
-		}
-
-		public override Task OnDisconnected(bool stopCalled)
-		{
-			var username = this.Context.User.Identity.Name;
-			if (!this.Context.User.Identity.IsAuthenticated) return base.OnDisconnected(stopCalled);
-			try
-			{
-				var groupsToLeave = this._groupRegistrar.GetGroupsForUser(username);
-				foreach (var groupToJoin in groupsToLeave.Result)
-				{
-					this._groupLeaveService.LeaveGroup(groupToJoin, this.Context.ConnectionId);
-					Debug.WriteLine("SignalR EventHub: {0} has left group {1}", username, groupToJoin);
-				}
-				OnUserDisconnected(new SignalRUserDisconnectedEventArgs(this.Context.User, this.Context.ConnectionId));
-			}
-			catch (Exception ex)
-			{
-				OnExceptionOccurred(new SignalRExceptionEventArgs(this.Context.User, ex, this.Context.ConnectionId));
-				SendExceptionToClient("Error Leaving Groups", ex);
-			}
-
-			return base.OnDisconnected(stopCalled);
-		}
-
-		public static event EventHandler<SignalRUserConnectedEventArgs> UserConnected;
-
-		private static void OnUserConnected(SignalRUserConnectedEventArgs e)
-		{
-			EventHandler<SignalRUserConnectedEventArgs> handler = UserConnected;
-			if (handler != null) handler(null, e);
-		}
-
-		public static event EventHandler<SignalRUserDisconnectedEventArgs> UserDisconnected;
-
-		private static void OnUserDisconnected(SignalRUserDisconnectedEventArgs e)
-		{
-			EventHandler<SignalRUserDisconnectedEventArgs> handler = UserDisconnected;
-			if (handler != null) handler(null, e);
-		}
-
-		public static event EventHandler<SignalRExceptionEventArgs> ExceptionOccurred;
-
-		private static void OnExceptionOccurred(SignalRExceptionEventArgs e)
-		{
-			EventHandler<SignalRExceptionEventArgs> handler = ExceptionOccurred;
-			if (handler != null) handler(null, e);
 		}
 
 		[HubMethodName("raiseEvent")]
@@ -127,9 +58,10 @@ namespace LAN.Core.Eventing.SignalR
 					throw new AuthenticationException(errorMessage);
 				}
 
-				var eventTask = InvokeHandlerAsync(handler, deserializedRequest);
+				var eventTask = new Task(() => handler.Invoke(deserializedRequest, this.Context.User));
 				eventTask.ContinueWith(HandleErrorForAsyncHandler, TaskContinuationOptions.OnlyOnFaulted);
 				eventTask.Start();
+
 				Debug.WriteLine("SignalR EventHub: {0} has raised {1} event", this.Context.User.Identity.Name, eventName);
 			}
 			catch (Exception ex)
@@ -137,6 +69,100 @@ namespace LAN.Core.Eventing.SignalR
 				OnExceptionOccurred(new SignalRExceptionEventArgs(this.Context.User, ex, this.Context.ConnectionId));
 				SendExceptionToClient("An unknown error has occurred", ex);
 			}
+		}
+
+		#region Connect
+
+		public override Task OnConnected()
+		{
+			var username = this.Context.User.Identity.Name;
+			if (!this.Context.User.Identity.IsAuthenticated) return base.OnConnected();
+			try
+			{
+				var groupsToJoin = this._groupRegistrar.GetGroupsForUser(username);
+				foreach (var groupToJoin in groupsToJoin.Result)
+				{
+					this._groupJoinService.JoinToGroup(groupToJoin, this.Context.ConnectionId);
+					Debug.WriteLine("SignalR EventHub: {0} has joined group {1}", username, groupToJoin);
+				}
+				OnUserConnected(new SignalRUserConnectedEventArgs(this.Context.User, this.Context.ConnectionId));
+			}
+			catch (Exception ex)
+			{
+				OnExceptionOccurred(new SignalRExceptionEventArgs(this.Context.User, ex, this.Context.ConnectionId));
+				SendExceptionToClient("Error Joining Groups", ex);
+			}
+
+			return base.OnConnected();
+		}
+
+		/// <summary>
+		/// Will be raised when a client's browser connects
+		/// </summary>
+		public static event EventHandler<SignalRUserConnectedEventArgs> UserConnected;
+
+		private static void OnUserConnected(SignalRUserConnectedEventArgs e)
+		{
+			EventHandler<SignalRUserConnectedEventArgs> handler = UserConnected;
+			if (handler != null) handler(null, e);
+		}
+
+		#endregion
+
+		#region Disconnect
+
+		public override Task OnDisconnected(bool stopCalled)
+		{
+			var username = this.Context.User.Identity.Name;
+			if (!this.Context.User.Identity.IsAuthenticated) return base.OnDisconnected(stopCalled);
+			try
+			{
+				var groupsToLeave = this._groupRegistrar.GetGroupsForUser(username);
+				foreach (var groupToJoin in groupsToLeave.Result)
+				{
+					this._groupLeaveService.LeaveGroup(groupToJoin, this.Context.ConnectionId);
+					Debug.WriteLine("SignalR EventHub: {0} has left group {1}", username, groupToJoin);
+				}
+				OnUserDisconnected(new SignalRUserDisconnectedEventArgs(this.Context.User, this.Context.ConnectionId));
+			}
+			catch (Exception ex)
+			{
+				OnExceptionOccurred(new SignalRExceptionEventArgs(this.Context.User, ex, this.Context.ConnectionId));
+				SendExceptionToClient("Error Leaving Groups", ex);
+			}
+
+			return base.OnDisconnected(stopCalled);
+		}
+
+		/// <summary>
+		/// Will be raised when a client's browser disconnects
+		/// </summary>
+		public static event EventHandler<SignalRUserDisconnectedEventArgs> UserDisconnected;
+
+		private static void OnUserDisconnected(SignalRUserDisconnectedEventArgs e)
+		{
+			EventHandler<SignalRUserDisconnectedEventArgs> handler = UserDisconnected;
+			if (handler != null) handler(null, e);
+		}
+
+		#endregion
+
+		#region Errors
+
+		/// <summary>
+		/// When sending errors to the client, this will be used to decide if the full exception details should be sent down to the client.
+		/// </summary>
+		public static bool SendFullStackTraceToClient = false;
+
+		/// <summary>
+		/// Will be raised when an exception occurs within the event hub.
+		/// </summary>
+		public static event EventHandler<SignalRExceptionEventArgs> ExceptionOccurred;
+
+		private static void OnExceptionOccurred(SignalRExceptionEventArgs e)
+		{
+			EventHandler<SignalRExceptionEventArgs> handler = ExceptionOccurred;
+			if (handler != null) handler(null, e);
 		}
 
 		private void HandleErrorForAsyncHandler(Task handlerTask)
@@ -148,15 +174,10 @@ namespace LAN.Core.Eventing.SignalR
 			SendExceptionToClient("Handler Exception", exception);
 		}
 
-		private Task InvokeHandlerAsync(IHandler handler, RequestBase deserializedRequest)
-		{
-			return new Task(() => handler.Invoke(deserializedRequest, this.Context.User));
-		}
-
 		private void SendExceptionToClient(string baseMessage, Exception ex)
 		{
 			var message = "";
-			if (Debugger.IsAttached)
+			if (SendFullStackTraceToClient)
 			{
 				message = Environment.NewLine + ex.ToString();
 			}
@@ -168,5 +189,7 @@ namespace LAN.Core.Eventing.SignalR
 			Debug.WriteLine("SignalR EventHub: Error: \n{0}", message);
 			this._messagingContext.PublishToClient(new EventName(ServerEvents.OnError), new OnErrorResponse(null) { CorrelationId = this.Context.ConnectionId, Message = message });
 		}
+
+		#endregion
 	}
 }
