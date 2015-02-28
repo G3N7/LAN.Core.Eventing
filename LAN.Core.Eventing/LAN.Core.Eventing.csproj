@@ -86,6 +86,7 @@
   <ItemGroup>
     <Compile Include="EventName.cs" />
     <Compile Include="HandlerBase.cs" />
+    <Compile Include="IGroupLookupService.cs" />
     <Compile Include="IGroupJoinService.cs" />
     <Compile Include="IGroupLeaveService.cs" />
     <Compile Include="IHandler.cs" />
