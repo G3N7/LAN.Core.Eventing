@@ -24,3 +24,10 @@ Core Types
 Core Services
 ---
 todo
+
+Shoutouts
+---
+* [AppRiver LLC](http://www.appriver.com/) and [my amazing colleagues](http://devblog.appriver.com/) - thank you for your continued support, guidance, and feedback.
+* [Jesse Sweetland](https://github.com/sweetlandj) - Your architectual guidance has been invaluable.  :bow:
+* [Nick VanderPyle](https://github.com/NickVanderPyle) - Teaching me the importance of strong typing to long term maintainability and teaching me to peek under the covers and understand how the black box works.
+* [David Heinemeier Hansson](https://github.com/dhh) - Inspiring me to optimize my development using conventions and a recipe of technologies that are flexible enough to be a general solution.
