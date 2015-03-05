@@ -21,13 +21,21 @@ namespace LAN.Core.Eventing.SignalR
 
 		public SignalREventHub()
 		{
-			if (ContainerRegistry.DefaultContainer == null) throw new Exception("You have not set the default container.  ContainerRegistry.DefaultContainer");
-			var container = ContainerRegistry.DefaultContainer;
-			this._handlerRepository = container.GetInstance<IHandlerRepository>();
-			this._messagingContext = container.GetInstance<IMessagingContext>();
-			this._groupRegistrar = container.GetInstance<ISignalRGroupRegistrar>();
-			this._groupJoinService = container.GetInstance<IGroupJoinService>();
-			this._groupLeaveService = container.GetInstance<IGroupLeaveService>();
+			try
+			{
+				if (ContainerRegistry.DefaultContainer == null) throw new Exception("You have not set the default container.  ContainerRegistry.DefaultContainer");
+				var container = ContainerRegistry.DefaultContainer;
+				this._handlerRepository = container.GetInstance<IHandlerRepository>();
+				this._messagingContext = container.GetInstance<IMessagingContext>();
+				this._groupRegistrar = container.GetInstance<ISignalRGroupRegistrar>();
+				this._groupJoinService = container.GetInstance<IGroupJoinService>();
+				this._groupLeaveService = container.GetInstance<IGroupLeaveService>();
+			}
+			catch (Exception ex)
+			{
+				OnExceptionOccurred(new SignalRExceptionEventArgs(this.Context.User, ex, this.Context.ConnectionId));
+				throw;
+			}
 		}
 
 		[HubMethodName("raiseEvent")]
