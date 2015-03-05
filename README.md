@@ -9,6 +9,10 @@ License
 ---
 [The MIT License (MIT)](https://github.com/G3N7/LAN.Core.Eventing/blob/master/LICENSE)
 
+Kanban Board
+---
+[Trello - A high level roadmap](https://trello.com/b/JMhEwuAf/lan-core-eventing)
+
 Docs
 ---
 * [Setup Dependencies (Composition Root)](https://github.com/G3N7/LAN.Core.Eventing/wiki/Setup-Dependencies-(Composition-Root))
