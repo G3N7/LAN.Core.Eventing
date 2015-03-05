@@ -30,6 +30,4 @@ namespace LAN.Core.Eventing.Tests
 			TestResponse
 		}
     }
-
-
 }
