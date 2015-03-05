@@ -9,6 +9,11 @@ namespace LAN.Core.Eventing.SignalR
 	{
 		protected static ConcurrentDictionary<string, ThreadSafeStringLookup> ConnectionLookups { get; private set; }
 
+		static SignalRGroupService()
+		{
+			ConnectionLookups = new ConcurrentDictionary<string, ThreadSafeStringLookup>();
+		}
+
 		public void JoinToGroup(string groupToJoin, string connectionId)
 		{
 			var context = GlobalHost.ConnectionManager.GetHubContext<SignalREventHub>();
