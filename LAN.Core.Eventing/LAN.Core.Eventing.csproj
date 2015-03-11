@@ -92,6 +92,7 @@
     <Compile Include="IHandler.cs" />
     <Compile Include="IHandlerRepository.cs" />
     <Compile Include="IMessagingContext.cs" />
+    <Compile Include="IConnectionContext.cs" />
     <Compile Include="PushBase.cs" />
     <Compile Include="ResponseBase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Specialized;
 using System.Diagnostics;
 using System.Security.Authentication;
+using System.Security.Cryptography;
 using System.Threading.Tasks;
 using LAN.Core.DependencyInjection;
 using LAN.Core.Eventing.Server;
@@ -54,8 +56,8 @@ namespace LAN.Core.Eventing.SignalR
 					throw new ArgumentException(errorMessage, "eventName");
 				}
 
-				data.Add("correlationId", this.Context.ConnectionId);
 				var deserializedRequest = (RequestBase)data.ToObject(handler.GetRequestType());
+				deserializedRequest.ConnectionContext = new SignalRConnectionContext(this.Context);
 
 				if (!handler.IsAuthorized(deserializedRequest, this.Context.User))
 				{

@@ -2,6 +2,6 @@
 {
 	public abstract class RequestBase
 	{
-		public string CorrelationId { get; set; }
+		public IConnectionContext ConnectionContext { get; set; }
 	}
 }

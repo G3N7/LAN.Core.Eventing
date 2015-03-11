@@ -69,6 +69,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="SignalRConnectionContext.cs" />
     <Compile Include="ThreadSafeStringLookup.cs" />
     <Compile Include="DIHandlerRepository.cs" />
     <Compile Include="ISignalRConnectionLookupService.cs" />
