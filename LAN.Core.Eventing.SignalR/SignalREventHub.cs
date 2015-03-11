@@ -89,7 +89,7 @@ namespace LAN.Core.Eventing.SignalR
 			if (!this.Context.User.Identity.IsAuthenticated) return base.OnConnected();
 			try
 			{
-				var groupsToJoin = this._groupRegistrar.GetGroupsForUser(username, new SignalRConnectionContext(this.Context));
+				var groupsToJoin = this._groupRegistrar.GetGroupsForUser(username);
 				foreach (var groupToJoin in groupsToJoin.Result)
 				{
 					this._groupJoinService.JoinToGroup(groupToJoin, this.Context.ConnectionId);
@@ -127,7 +127,7 @@ namespace LAN.Core.Eventing.SignalR
 			if (!this.Context.User.Identity.IsAuthenticated) return base.OnDisconnected(stopCalled);
 			try
 			{
-				var groupsToLeave = this._groupRegistrar.GetGroupsForUser(username, new SignalRConnectionContext(this.Context));
+				var groupsToLeave = this._groupRegistrar.GetGroupsForUser(username);
 				foreach (var groupToJoin in groupsToLeave.Result)
 				{
 					this._groupLeaveService.LeaveGroup(groupToJoin, this.Context.ConnectionId);
