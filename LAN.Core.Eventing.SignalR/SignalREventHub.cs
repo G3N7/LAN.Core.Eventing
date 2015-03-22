@@ -35,7 +35,7 @@ namespace LAN.Core.Eventing.SignalR
 			}
 			catch (Exception ex)
 			{
-				OnExceptionOccurred(new SignalRExceptionEventArgs(this.Context.User, ex, this.Context.ConnectionId));
+				OnExceptionOccurred(new SignalRExceptionEventArgs(this.Context.User, ex, new SignalRConnectionContext(this.Context)));
 				throw;
 			}
 		}
@@ -76,7 +76,7 @@ namespace LAN.Core.Eventing.SignalR
 			}
 			catch (Exception ex)
 			{
-				OnExceptionOccurred(new SignalRExceptionEventArgs(this.Context.User, ex, this.Context.ConnectionId));
+				OnExceptionOccurred(new SignalRExceptionEventArgs(this.Context.User, ex, new SignalRConnectionContext(this.Context)));
 				SendExceptionToClient("An unknown error has occurred", ex);
 			}
 		}
@@ -95,11 +95,11 @@ namespace LAN.Core.Eventing.SignalR
 					this._groupJoinService.JoinToGroup(groupToJoin, this.Context.ConnectionId);
 					Debug.WriteLine("SignalR EventHub: {0} has joined group {1}", username, groupToJoin);
 				}
-				OnUserConnected(new SignalRUserConnectedEventArgs(this.Context.User, this.Context.ConnectionId));
+				OnUserConnected(new SignalRUserConnectedEventArgs(this.Context.User, new SignalRConnectionContext(this.Context)));
 			}
 			catch (Exception ex)
 			{
-				OnExceptionOccurred(new SignalRExceptionEventArgs(this.Context.User, ex, this.Context.ConnectionId));
+				OnExceptionOccurred(new SignalRExceptionEventArgs(this.Context.User, ex, new SignalRConnectionContext(this.Context)));
 				SendExceptionToClient("Error Joining Groups", ex);
 			}
 
@@ -133,11 +133,11 @@ namespace LAN.Core.Eventing.SignalR
 					this._groupLeaveService.LeaveGroup(groupToJoin, this.Context.ConnectionId);
 					Debug.WriteLine("SignalR EventHub: {0} has left group {1}", username, groupToJoin);
 				}
-				OnUserDisconnected(new SignalRUserDisconnectedEventArgs(this.Context.User, this.Context.ConnectionId));
+				OnUserDisconnected(new SignalRUserDisconnectedEventArgs(this.Context.User, new SignalRConnectionContext(this.Context)));
 			}
 			catch (Exception ex)
 			{
-				OnExceptionOccurred(new SignalRExceptionEventArgs(this.Context.User, ex, this.Context.ConnectionId));
+				OnExceptionOccurred(new SignalRExceptionEventArgs(this.Context.User, ex, new SignalRConnectionContext(this.Context)));
 				SendExceptionToClient("Error Leaving Groups", ex);
 			}
 
@@ -180,7 +180,7 @@ namespace LAN.Core.Eventing.SignalR
 			if (handlerTask.Exception == null) return; //this should never happen, since this will only be used for faulted tasks
 
 			var exception = handlerTask.Exception.GetBaseException();
-			OnExceptionOccurred(new SignalRExceptionEventArgs(this.Context.User, exception, this.Context.ConnectionId));
+			OnExceptionOccurred(new SignalRExceptionEventArgs(this.Context.User, exception, new SignalRConnectionContext(this.Context)));
 			SendExceptionToClient("Handler Exception", exception);
 		}
 

@@ -5,14 +5,14 @@ namespace LAN.Core.Eventing.SignalR
 {
 	public class SignalRExceptionEventArgs : EventArgs
 	{
-		public SignalRExceptionEventArgs(IPrincipal principal, Exception ex, string connectionId)
+		public SignalRExceptionEventArgs(IPrincipal principal, Exception ex, IConnectionContext context)
 		{
 			this.Principal = principal;
 			this.Exception = ex;
-			this.ConnectionId = connectionId;
+			this.Context = context;
 		}
 
-		public string ConnectionId { get; private set; }
+		public IConnectionContext Context { get; private set; }
 		public IPrincipal Principal { get; private set; }
 		public Exception Exception { get; private set; }
 	}

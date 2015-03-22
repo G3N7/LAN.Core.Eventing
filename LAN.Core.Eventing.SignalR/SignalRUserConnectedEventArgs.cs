@@ -6,12 +6,12 @@ namespace LAN.Core.Eventing.SignalR
 	public class SignalRUserConnectedEventArgs : EventArgs
 	{
 		public IPrincipal Principal { get; private set; }
-		public string CorrelationId { get; private set; }
+		public IConnectionContext ConnectionContext { get; private set; }
 
-		public SignalRUserConnectedEventArgs(IPrincipal principal, string correlationId)
+		public SignalRUserConnectedEventArgs(IPrincipal principal, IConnectionContext connectionContext)
 		{
 			this.Principal = principal;
-			this.CorrelationId = correlationId;
+			this.ConnectionContext = connectionContext;
 		}
 	}
 }
