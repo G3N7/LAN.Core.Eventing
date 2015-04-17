@@ -6,11 +6,11 @@
     <title>$title$</title>
     <authors>Mitch Ferrer</authors>
     <owners>Mitch Ferrer</owners>
-    <licenseUrl>https://github.com/G3N7/LAN.Core.Eventing/blob/master/LICENSE</licenseUrl>
+    <licenseUrl>https://raw.githubusercontent.com/G3N7/LAN.Core.Eventing/master/LICENSE</licenseUrl>
     <projectUrl>https://github.com/G3N7/LAN.Core.Eventing</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <description>A simple eventing abstraction for C# to handle events with directionality.</description>
-    <copyright>Copyright 2014</copyright>
-    <tags>eventing c# events</tags>	
+    <description>Eventing for C# backend</description>
+    <copyright>Copyright 2015</copyright>
+    <tags>Eventing</tags>
   </metadata>
 </package>

@@ -1,16 +1,16 @@
 <?xml version="1.0"?>
 <package >
 	<metadata>
-		<id>$id$</id>
-		<version>$version$</version>
-		<title>$title$</title>
-		<authors>Mitch Ferrer</authors>
-		<owners>Mitch Ferrer</owners>
-		<licenseUrl>https://github.com/G3N7/LAN.Core.Eventing/blob/master/LICENSE</licenseUrl>
-		<projectUrl>https://github.com/G3N7/LAN.Core.Eventing</projectUrl>
-		<requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <id>$id$</id>
+    <version>$version$</version>
+    <title>$title$</title>
+    <authors>Mitch Ferrer</authors>
+    <owners>Mitch Ferrer</owners>
+    <licenseUrl>https://raw.githubusercontent.com/G3N7/LAN.Core.Eventing/master/LICENSE</licenseUrl>
+    <projectUrl>https://github.com/G3N7/LAN.Core.Eventing</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <copyright>Copyright 2015</copyright>
 		<description>A SignalR implementation of the LAN.Core.Eventing eventing abstraction for C# to handle events with directionality.</description>
-		<copyright>Copyright 2014</copyright>
 		<tags>eventing c# signalr events</tags>
 	</metadata>
 </package>
