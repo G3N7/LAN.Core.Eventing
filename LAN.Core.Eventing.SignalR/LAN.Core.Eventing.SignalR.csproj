@@ -38,8 +38,8 @@
     <AssemblyOriginatorKeyFile>key.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="LAN.Core.DependencyInjection, Version=1.1.4.0, Culture=neutral, PublicKeyToken=9ec1122e566267ff, processorArchitecture=MSIL">
-      <HintPath>..\packages\LAN.Core.DependencyInjection.1.1.4.0\lib\net45\LAN.Core.DependencyInjection.dll</HintPath>
+    <Reference Include="LAN.Core.DependencyInjection, Version=1.1.5.0, Culture=neutral, PublicKeyToken=9ec1122e566267ff, processorArchitecture=MSIL">
+      <HintPath>..\packages\LAN.Core.DependencyInjection.1.1.5.0\lib\net45\LAN.Core.DependencyInjection.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.AspNet.SignalR.Core, Version=2.2.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
