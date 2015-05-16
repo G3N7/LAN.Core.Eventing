@@ -71,6 +71,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="SignalRConnectionContext.cs" />
+    <Compile Include="SignalREventRaisedFromClientEventArgs.cs" />
     <Compile Include="ThreadSafeStringLookup.cs" />
     <Compile Include="DIHandlerRepository.cs" />
     <Compile Include="ISignalRConnectionLookupService.cs" />

@@ -38,6 +38,8 @@ namespace LAN.Core.Eventing.SignalR
 			}
 		}
 
+		#region Raise Event
+
 		[HubMethodName("raiseEvent")]
 		// ReSharper disable once UnusedMember.Global
 		public void RaiseEvent(string eventName, JObject data)
@@ -56,6 +58,8 @@ namespace LAN.Core.Eventing.SignalR
 
 				var deserializedRequest = (RequestBase)data.ToObject(handler.GetRequestType());
 				deserializedRequest.ConnectionContext = new SignalRConnectionContext(this.Context);
+
+				OnEventRaisedFromClient(new SignalREventRaisedFromClientEventArgs(eventName, deserializedRequest));
 
 				if (!handler.IsAuthorized(deserializedRequest, this.Context.User))
 				{
@@ -76,6 +80,19 @@ namespace LAN.Core.Eventing.SignalR
 				SendExceptionToClient("An unknown error has occurred", ex);
 			}
 		}
+
+		/// <summary>
+		/// Will be raised whenever a request is recieved from the client.
+		/// </summary>
+		public static event EventHandler<SignalREventRaisedFromClientEventArgs> EventRaisedFromClient;
+
+		private static void OnEventRaisedFromClient(SignalREventRaisedFromClientEventArgs e)
+		{
+			var handler = EventRaisedFromClient;
+			handler?.Invoke(null, e);
+		}
+
+		#endregion
 
 		#region Connect
 
