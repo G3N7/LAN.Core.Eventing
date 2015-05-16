@@ -19,7 +19,7 @@ namespace LAN.Core.Eventing.SignalR
 			ThreadSafeStringLookup lookup;
 			if (ConnectionLookups.TryGetValue(signalRUserDisconnectedEventArgs.Principal.Identity.Name, out lookup))
 			{
-				lookup.RemoveConnectionId(signalRUserDisconnectedEventArgs.ConnectionContext.CorrelationId);
+				lookup.RemoveConnectionId(signalRUserDisconnectedEventArgs.Context.CorrelationId);
 			}
 		}
 
@@ -29,7 +29,7 @@ namespace LAN.Core.Eventing.SignalR
 				signalRUserConnectedEventArgs.Principal.Identity.Name,
 				s => new ThreadSafeStringLookup());
 
-			lookup.AddConnectionId(signalRUserConnectedEventArgs.ConnectionContext.CorrelationId);
+			lookup.AddConnectionId(signalRUserConnectedEventArgs.Context.CorrelationId);
 		}
 
 		public IEnumerable<string> GetByIdentityName(string identityName)

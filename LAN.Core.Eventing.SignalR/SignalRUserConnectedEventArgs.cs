@@ -1,17 +1,29 @@
 ﻿using System;
+using System.ComponentModel;
+using System.Diagnostics.Contracts;
 using System.Security.Principal;
 
 namespace LAN.Core.Eventing.SignalR
 {
+	[ImmutableObject(true)]
 	public class SignalRUserConnectedEventArgs : EventArgs
 	{
-		public IPrincipal Principal { get; private set; }
-		public IConnectionContext ConnectionContext { get; private set; }
+		public IPrincipal Principal { get; }
+		public IConnectionContext Context { get; }
 
-		public SignalRUserConnectedEventArgs(IPrincipal principal, IConnectionContext connectionContext)
+		public SignalRUserConnectedEventArgs(IPrincipal principal, IConnectionContext context)
 		{
+			Contract.Requires(principal != null);
+			Contract.Requires(context != null);
+
+			if (principal == null) throw new ArgumentNullException(nameof(principal));
+			if (context == null) throw new ArgumentNullException(nameof(context));
+
+			Contract.Ensures(this.Principal != null);
+			Contract.Ensures(this.Context != null);
+
 			this.Principal = principal;
-			this.ConnectionContext = connectionContext;
+			this.Context = Context;
 		}
 	}
 }
