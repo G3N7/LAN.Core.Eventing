@@ -3,14 +3,14 @@ using System.Diagnostics.Contracts;
 
 namespace LAN.Core.Eventing
 {
-	[ContractClass(typeof (IGroupLookupServiceContract))]
+	[ContractClass(typeof (GroupLookupServiceContract))]
 	public interface IGroupLookupService
 	{
 		IEnumerable<string> GetSignalRGroupsForConnectionId(string connectionId);
 	}
 
 	[ContractClassFor(typeof (IGroupLookupService))]
-	abstract class IGroupLookupServiceContract : IGroupLookupService
+	abstract class GroupLookupServiceContract : IGroupLookupService
 	{
 		public IEnumerable<string> GetSignalRGroupsForConnectionId(string connectionId)
 		{

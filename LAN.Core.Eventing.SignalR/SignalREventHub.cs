@@ -111,7 +111,7 @@ namespace LAN.Core.Eventing.SignalR
 
 		private static void OnUserConnected(SignalRUserConnectedEventArgs e)
 		{
-			EventHandler<SignalRUserConnectedEventArgs> handler = UserConnected;
+			var handler = UserConnected;
 			handler?.Invoke(null, e);
 		}
 

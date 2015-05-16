@@ -2,14 +2,14 @@
 
 namespace LAN.Core.Eventing
 {
-	[ContractClass(typeof (IGroupJoinServiceContract))]
+	[ContractClass(typeof (GroupJoinServiceContract))]
 	public interface IGroupJoinService
 	{
 		void JoinToGroup(string groupToJoin, string uniqueId);
 	}
 
 	[ContractClassFor(typeof (IGroupJoinService))]
-	abstract class IGroupJoinServiceContract : IGroupJoinService
+	abstract class GroupJoinServiceContract : IGroupJoinService
 	{
 		void IGroupJoinService.JoinToGroup(string groupToJoin, string uniqueId)
 		{

@@ -7,7 +7,7 @@ namespace LAN.Core.Eventing.SignalR
 {
 	public class SignalRGroupService : IGroupJoinService, IGroupLeaveService, IGroupLookupService
 	{
-		protected static ConcurrentDictionary<string, ThreadSafeStringLookup> ConnectionLookups { get; private set; }
+		protected static ConcurrentDictionary<string, ThreadSafeStringLookup> ConnectionLookups { get; }
 
 		static SignalRGroupService()
 		{

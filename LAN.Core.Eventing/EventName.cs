@@ -9,34 +9,32 @@ namespace LAN.Core.Eventing
 
 		public EventName(Enum eventEnumMember)
 		{
-			if (eventEnumMember == null) throw new ArgumentNullException("eventEnumMember");
+			if (eventEnumMember == null) throw new ArgumentNullException(nameof(eventEnumMember));
 			var enumName = eventEnumMember.GetType().Name;
-			if (!enumName.Contains("Events")) throw new ArgumentException(string.Format("Event enums should end with Events as a matter of convention. (was {0})", enumName));
+			if (!enumName.Contains("Events")) throw new ArgumentException($"Event enums should end with Events as a matter of convention. (was {enumName})");
 			this._name = enumName.Replace("Events", "") + eventEnumMember;
 		}
 		
 		protected bool Equals(EventName other)
 		{
-			if (other == null) return false;
-			return string.Equals(_name, other._name);
+			return other != null && string.Equals(_name, other._name);
 		}
 
 		public override bool Equals(object obj)
 		{
 			if (ReferenceEquals(null, obj)) return false;
 			if (ReferenceEquals(this, obj)) return true;
-			if (obj.GetType() != this.GetType()) return false;
-			return Equals((EventName)obj);
+			return obj.GetType() == this.GetType() && Equals((EventName)obj);
 		}
 
 		public override int GetHashCode()
 		{
-			return (_name != null ? _name.GetHashCode() : 0);
+			return _name?.GetHashCode() ?? 0;
 		}
 
 		public static implicit operator string(EventName eventName)
 		{
-			return eventName == null ? null : eventName._name;
+			return eventName?._name;
 		}
 
 		public static implicit operator EventName(Enum enumValue)
@@ -64,16 +62,11 @@ namespace LAN.Core.Eventing
 
 			public int GetHashCode(EventName obj)
 			{
-				return (obj._name != null ? obj._name.GetHashCode() : 0);
+				return obj._name?.GetHashCode() ?? 0;
 			}
 		}
 
-		private static readonly IEqualityComparer<EventName> NameComparerInstance = new NameEqualityComparer();
-
-		public static IEqualityComparer<EventName> NameComparer
-		{
-			get { return NameComparerInstance; }
-		}
+		public static IEqualityComparer<EventName> NameComparer { get; } = new NameEqualityComparer();
 
 		#endregion
 

@@ -2,14 +2,14 @@
 
 namespace LAN.Core.Eventing
 {
-	[ContractClass(typeof (IGroupLeaveServiceContract))]
+	[ContractClass(typeof (GroupLeaveServiceContract))]
 	public interface IGroupLeaveService
 	{
 		void LeaveGroup(string groupToLeave, string uniqueId);
 	}
 
 	[ContractClassFor(typeof (IGroupLeaveService))]
-	abstract class IGroupLeaveServiceContract : IGroupLeaveService
+	abstract class GroupLeaveServiceContract : IGroupLeaveService
 	{
 		void IGroupLeaveService.LeaveGroup(string groupToLeave, string uniqueId)
 		{
