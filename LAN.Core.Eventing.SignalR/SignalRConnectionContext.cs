@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNet.SignalR.Hubs;
@@ -13,7 +12,7 @@ namespace LAN.Core.Eventing.SignalR
 			this.CorrelationId = context.ConnectionId;
 		}
 
-		public Dictionary<string, string> QueryString { get; private set; }
-		public string CorrelationId { get; private set; }
+		public Dictionary<string, string> QueryString { get; }
+		public string CorrelationId { get; }
 	}
 }

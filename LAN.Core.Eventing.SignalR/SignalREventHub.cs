@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Specialized;
 using System.Diagnostics;
 using System.Security.Authentication;
-using System.Security.Cryptography;
 using System.Threading.Tasks;
 using LAN.Core.DependencyInjection;
 using LAN.Core.Eventing.Server;
@@ -53,7 +51,7 @@ namespace LAN.Core.Eventing.SignalR
 						"The event {0} is not a known event, there are only a few things this could be, check that you have Registered the Handler with your HandlerRepository, that its registered with the event you are emitting {0}, and that all of the handler's dependancies are registered with your DI container.",
 						eventName);
 					SendErrorToClient(errorMessage);
-					throw new ArgumentException(errorMessage, "eventName");
+					throw new ArgumentException(errorMessage, nameof(eventName));
 				}
 
 				var deserializedRequest = (RequestBase)data.ToObject(handler.GetRequestType());
@@ -61,9 +59,7 @@ namespace LAN.Core.Eventing.SignalR
 
 				if (!handler.IsAuthorized(deserializedRequest, this.Context.User))
 				{
-					var errorMessage = string.Format(
-						"Auth: You are not authorized to use the event {0}.",
-						eventName);
+					var errorMessage = $"Auth: You are not authorized to use the event {eventName}.";
 					SendErrorToClient(errorMessage);
 					throw new AuthenticationException(errorMessage);
 				}
@@ -87,19 +83,21 @@ namespace LAN.Core.Eventing.SignalR
 		{
 			var username = this.Context.User.Identity.Name;
 			if (!this.Context.User.Identity.IsAuthenticated) return base.OnConnected();
-			try
+
+			var context = new SignalRConnectionContext(this.Context);
+            try
 			{
-				var groupsToJoin = this._groupRegistrar.GetGroupsForUser(username);
+				var groupsToJoin = this._groupRegistrar.GetGroupsForUser(username, context);
 				foreach (var groupToJoin in groupsToJoin.Result)
 				{
 					this._groupJoinService.JoinToGroup(groupToJoin, this.Context.ConnectionId);
 					Debug.WriteLine("SignalR EventHub: {0} has joined group {1}", username, groupToJoin);
 				}
-				OnUserConnected(new SignalRUserConnectedEventArgs(this.Context.User, new SignalRConnectionContext(this.Context)));
+				OnUserConnected(new SignalRUserConnectedEventArgs(this.Context.User, context));
 			}
 			catch (Exception ex)
 			{
-				OnExceptionOccurred(new SignalRExceptionEventArgs(this.Context.User, ex, new SignalRConnectionContext(this.Context)));
+				OnExceptionOccurred(new SignalRExceptionEventArgs(this.Context.User, ex, context));
 				SendExceptionToClient("Error Joining Groups", ex);
 			}
 
@@ -114,7 +112,7 @@ namespace LAN.Core.Eventing.SignalR
 		private static void OnUserConnected(SignalRUserConnectedEventArgs e)
 		{
 			EventHandler<SignalRUserConnectedEventArgs> handler = UserConnected;
-			if (handler != null) handler(null, e);
+			handler?.Invoke(null, e);
 		}
 
 		#endregion
@@ -125,19 +123,20 @@ namespace LAN.Core.Eventing.SignalR
 		{
 			var username = this.Context.User.Identity.Name;
 			if (!this.Context.User.Identity.IsAuthenticated) return base.OnDisconnected(stopCalled);
+			var context = new SignalRConnectionContext(this.Context);
 			try
 			{
-				var groupsToLeave = this._groupRegistrar.GetGroupsForUser(username);
+				var groupsToLeave = this._groupRegistrar.GetGroupsForUser(username, context);
 				foreach (var groupToJoin in groupsToLeave.Result)
 				{
 					this._groupLeaveService.LeaveGroup(groupToJoin, this.Context.ConnectionId);
 					Debug.WriteLine("SignalR EventHub: {0} has left group {1}", username, groupToJoin);
 				}
-				OnUserDisconnected(new SignalRUserDisconnectedEventArgs(this.Context.User, new SignalRConnectionContext(this.Context)));
+				OnUserDisconnected(new SignalRUserDisconnectedEventArgs(this.Context.User, context));
 			}
 			catch (Exception ex)
 			{
-				OnExceptionOccurred(new SignalRExceptionEventArgs(this.Context.User, ex, new SignalRConnectionContext(this.Context)));
+				OnExceptionOccurred(new SignalRExceptionEventArgs(this.Context.User, ex, context));
 				SendExceptionToClient("Error Leaving Groups", ex);
 			}
 
@@ -151,8 +150,8 @@ namespace LAN.Core.Eventing.SignalR
 
 		private static void OnUserDisconnected(SignalRUserDisconnectedEventArgs e)
 		{
-			EventHandler<SignalRUserDisconnectedEventArgs> handler = UserDisconnected;
-			if (handler != null) handler(null, e);
+			var handler = UserDisconnected;
+			handler?.Invoke(null, e);
 		}
 
 		#endregion
@@ -171,8 +170,8 @@ namespace LAN.Core.Eventing.SignalR
 
 		private static void OnExceptionOccurred(SignalRExceptionEventArgs e)
 		{
-			EventHandler<SignalRExceptionEventArgs> handler = ExceptionOccurred;
-			if (handler != null) handler(null, e);
+			var handler = ExceptionOccurred;
+			handler?.Invoke(null, e);
 		}
 
 		private void HandleErrorForAsyncHandler(Task handlerTask)
@@ -189,7 +188,7 @@ namespace LAN.Core.Eventing.SignalR
 			var message = "";
 			if (SendFullStackTraceToClient)
 			{
-				message = Environment.NewLine + ex.ToString();
+				message = Environment.NewLine + ex;
 			}
 			SendErrorToClient(baseMessage + message);
 		}
