@@ -9,9 +9,9 @@ namespace LAN.Core.Eventing
 
 		public EventName(Enum eventEnumMember)
 		{
-			if (eventEnumMember == null) throw new ArgumentNullException(nameof(eventEnumMember));
+			if (eventEnumMember == null) throw new ArgumentNullException("eventEnumMember");
 			var enumName = eventEnumMember.GetType().Name;
-			if (!enumName.Contains("Events")) throw new ArgumentException($"Event enums should end with Events as a matter of convention. (was {enumName})");
+			if (!enumName.Contains("Events")) throw new ArgumentException(string.Format("Event enums should end with Events as a matter of convention. (was {0})", enumName));
 			this._name = enumName.Replace("Events", "") + eventEnumMember;
 		}
 		
@@ -29,12 +29,12 @@ namespace LAN.Core.Eventing
 
 		public override int GetHashCode()
 		{
-			return _name?.GetHashCode() ?? 0;
+			return _name != null ? _name.GetHashCode() : 0;
 		}
 
 		public static implicit operator string(EventName eventName)
 		{
-			return eventName?._name;
+			return eventName != null ? eventName._name : null;
 		}
 
 		public static implicit operator EventName(Enum enumValue)
@@ -62,11 +62,16 @@ namespace LAN.Core.Eventing
 
 			public int GetHashCode(EventName obj)
 			{
-				return obj._name?.GetHashCode() ?? 0;
+				return (obj._name != null ? obj._name.GetHashCode() : 0);
 			}
 		}
 
-		public static IEqualityComparer<EventName> NameComparer { get; } = new NameEqualityComparer();
+		private static readonly IEqualityComparer<EventName> NameComparerInstance = new NameEqualityComparer();
+
+		public static IEqualityComparer<EventName> NameComparer
+		{
+			get { return NameComparerInstance; }
+		}
 
 		#endregion
 

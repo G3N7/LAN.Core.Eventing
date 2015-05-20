@@ -12,8 +12,8 @@ namespace LAN.Core.Eventing.SignalR
 			Contract.Requires(eventName != null);
 			Contract.Requires(request != null);
 
-			if (eventName == null) throw new ArgumentNullException(nameof(eventName));
-			if (request == null) throw new ArgumentNullException(nameof(request));
+			if (eventName == null) throw new ArgumentNullException("eventName");
+			if (request == null) throw new ArgumentNullException("request");
 
 			Contract.Ensures(this.EventName != null);
 			Contract.Ensures(this.Request != null);
@@ -22,7 +22,7 @@ namespace LAN.Core.Eventing.SignalR
 			Request = request;
 		}
 
-		public string EventName { get; }
-		public RequestBase Request { get; }
+		public string EventName { get; private set; }
+		public RequestBase Request { get; private set; }
 	}
 }

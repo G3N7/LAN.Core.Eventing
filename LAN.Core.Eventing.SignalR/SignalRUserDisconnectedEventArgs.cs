@@ -16,8 +16,8 @@ namespace LAN.Core.Eventing.SignalR
 			Contract.Requires(principal != null);
 			Contract.Requires(context != null);
 
-			if (principal == null) throw new ArgumentNullException(nameof(principal));
-			if (context == null) throw new ArgumentNullException(nameof(context));
+			if (principal == null) throw new ArgumentNullException("principal");
+			if (context == null) throw new ArgumentNullException("context");
 
 			Contract.Ensures(this.Principal != null);
 			Contract.Ensures(this.Context != null);

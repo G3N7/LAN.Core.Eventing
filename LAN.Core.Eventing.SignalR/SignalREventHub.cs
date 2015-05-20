@@ -53,7 +53,7 @@ namespace LAN.Core.Eventing.SignalR
 						"The event {0} is not a known event, there are only a few things this could be, check that you have Registered the Handler with your HandlerRepository, that its registered with the event you are emitting {0}, and that all of the handler's dependancies are registered with your DI container.",
 						eventName);
 					SendErrorToClient(errorMessage);
-					throw new ArgumentException(errorMessage, nameof(eventName));
+					throw new ArgumentException(errorMessage, "eventName");
 				}
 
 				var deserializedRequest = (RequestBase)data.ToObject(handler.GetRequestType());
@@ -63,7 +63,7 @@ namespace LAN.Core.Eventing.SignalR
 
 				if (!handler.IsAuthorized(deserializedRequest, this.Context.User))
 				{
-					var errorMessage = $"Auth: You are not authorized to use the event {eventName}.";
+					var errorMessage = string.Format("Auth: You are not authorized to use the event {0}.", eventName);
 					SendErrorToClient(errorMessage);
 					throw new AuthenticationException(errorMessage);
 				}
@@ -89,7 +89,7 @@ namespace LAN.Core.Eventing.SignalR
 		private static void OnEventRaisedFromClient(SignalREventRaisedFromClientEventArgs e)
 		{
 			var handler = EventRaisedFromClient;
-			handler?.Invoke(null, e);
+			if (handler != null ) handler.Invoke(null, e);
 		}
 
 		#endregion
@@ -129,7 +129,7 @@ namespace LAN.Core.Eventing.SignalR
 		private static void OnUserConnected(SignalRUserConnectedEventArgs e)
 		{
 			var handler = UserConnected;
-			handler?.Invoke(null, e);
+			if (handler != null) handler.Invoke(null, e);
 		}
 
 		#endregion
@@ -168,7 +168,7 @@ namespace LAN.Core.Eventing.SignalR
 		private static void OnUserDisconnected(SignalRUserDisconnectedEventArgs e)
 		{
 			var handler = UserDisconnected;
-			handler?.Invoke(null, e);
+			if (handler != null) handler.Invoke(null, e);
 		}
 
 		#endregion
@@ -188,7 +188,7 @@ namespace LAN.Core.Eventing.SignalR
 		private static void OnExceptionOccurred(SignalRExceptionEventArgs e)
 		{
 			var handler = ExceptionOccurred;
-			handler?.Invoke(null, e);
+			if (handler != null) handler.Invoke(null, e);
 		}
 
 		private void HandleErrorForAsyncHandler(Task handlerTask)

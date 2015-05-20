@@ -12,7 +12,7 @@ namespace LAN.Core.Eventing.SignalR
 			this.CorrelationId = context.ConnectionId;
 		}
 
-		public Dictionary<string, string> QueryString { get; }
-		public string CorrelationId { get; }
+		public Dictionary<string, string> QueryString { get; private set; }
+		public string CorrelationId { get; private set; }
 	}
 }
