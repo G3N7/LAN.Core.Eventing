@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Security.Authentication;
+using System.Security.Principal;
 using System.Threading.Tasks;
 using LAN.Core.DependencyInjection;
 using LAN.Core.Eventing.Server;
@@ -21,21 +22,13 @@ namespace LAN.Core.Eventing.SignalR
 
 		public SignalREventHub()
 		{
-			try
-			{
-				if (ContainerRegistry.DefaultContainer == null) throw new Exception("You have not set the default container.  ContainerRegistry.DefaultContainer");
-				var container = ContainerRegistry.DefaultContainer;
-				this._handlerRepository = container.GetInstance<IHandlerRepository>();
-				this._messagingContext = container.GetInstance<IMessagingContext>();
-				this._groupRegistrar = container.GetInstance<ISignalRGroupRegistrar>();
-				this._groupJoinService = container.GetInstance<IGroupJoinService>();
-				this._groupLeaveService = container.GetInstance<IGroupLeaveService>();
-			}
-			catch (Exception ex)
-			{
-				OnExceptionOccurred(new SignalRExceptionEventArgs(this.Context.User, ex, new SignalRConnectionContext(this.Context)));
-				throw;
-			}
+			if (ContainerRegistry.DefaultContainer == null) throw new Exception("You have not set the default container.  ContainerRegistry.DefaultContainer");
+			var container = ContainerRegistry.DefaultContainer;
+			this._handlerRepository = container.GetInstance<IHandlerRepository>();
+			this._messagingContext = container.GetInstance<IMessagingContext>();
+			this._groupRegistrar = container.GetInstance<ISignalRGroupRegistrar>();
+			this._groupJoinService = container.GetInstance<IGroupJoinService>();
+			this._groupLeaveService = container.GetInstance<IGroupLeaveService>();
 		}
 
 		#region Raise Event
@@ -57,9 +50,10 @@ namespace LAN.Core.Eventing.SignalR
 				}
 
 				var deserializedRequest = (RequestBase)data.ToObject(handler.GetRequestType());
-				deserializedRequest.ConnectionContext = new SignalRConnectionContext(this.Context);
-
-				OnEventRaisedFromClient(new SignalREventRaisedFromClientEventArgs(eventName, deserializedRequest));
+				var context = new SignalRConnectionContext(this.Context);
+				deserializedRequest.ConnectionContext = context;
+				
+				OnEventRaisedFromClient(new SignalREventRaisedFromClientEventArgs(eventName, deserializedRequest, context));
 
 				if (!handler.IsAuthorized(deserializedRequest, this.Context.User))
 				{

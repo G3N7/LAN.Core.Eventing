@@ -23,7 +23,7 @@ namespace LAN.Core.Eventing.SignalR
 			Contract.Ensures(this.Context != null);
 
 			this.Principal = principal;
-			this.Context = Context;
+			this.Context = context;
 		}
 	}
 }
