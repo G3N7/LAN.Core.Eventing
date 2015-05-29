@@ -1,0 +1,56 @@
+﻿<#@ output extension=".ts" #>
+<#@ include file="../Core.TypeScript.tt" #>
+
+<#
+	var backend = GetProjectToScan("RailsSharp.Example");
+	var classes = GetClasses(backend.ProjectItems).ToArray();
+	var enums = GetEnums(backend.ProjectItems).ToArray();
+#>
+
+<# foreach (var c in classes) { #>
+<# if (_isRequest(c) || _isResponse(c))
+{ #>
+	declare class <#= c.Name #> {
+		<# foreach (var prop in GetMembers(c)) { #>
+		<# if (!prop.Name.Equals("CorrelationId")) { #>
+		<#= _toCamelCase(prop.Name) #>: <#= _getTypeScriptTypeName(prop) #>;
+		<# } #>
+		<# } #>
+	}
+<# }} #>
+
+<# foreach (var e in enums) { #>
+<# if (_isEventEnum(e))
+{ #>
+	class <#= e.Name #> {
+		<# foreach (var element in e.Children)
+{	
+				var value = element as CodeVariable;
+				if (value == null) continue;
+		 #>
+			
+		static <#= value.Name #> : string = '<#= e.Name.Substring(0, e.Name.IndexOf("Events", StringComparison.InvariantCulture)) + value.Name #>';
+		<# } #>
+	}
+<# }} #>
+
+var ServerEvents = {
+	OnError: "ServerOnError",
+	OnWarn: "ServerOnWarn",
+	OnNotification: "ServerOnNotification",
+};
+
+<#+
+	private bool _isRequest(CodeClass2 potentialRequestClass)
+	{
+		return potentialRequestClass.IsDerivedFrom["LAN.Core.Eventing.RequestBase"];
+	}
+	private bool _isResponse(CodeClass2 potentialResponseClass)
+	{
+		return potentialResponseClass.IsDerivedFrom["LAN.Core.Eventing.ResponseBase"];
+	}
+	private bool _isEventEnum(CodeEnum eEnum)
+	{
+		return eEnum.Name.EndsWith("Events");
+	}
+#>

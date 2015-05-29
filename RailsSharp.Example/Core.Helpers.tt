@@ -1,0 +1,324 @@
+﻿<#@ template debug="true" hostspecific="true" language="C#" #>
+<#@ import namespace="EnvDTE" #>
+<#@ import namespace="EnvDTE80" #>
+<#@ import namespace="System.Collections" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ import namespace="System.Text.RegularExpressions" #>
+<#@ import namespace="System.Linq" #>
+<#@ assembly name="System.Core" #>
+<#@ assembly name="Microsoft.VisualStudio.Shell.Interop" #>
+<#@ assembly name="EnvDTE" #>
+<#@ assembly name="EnvDTE80" #><#+
+ 
+      private readonly Regex PossibleInterfaceRegex = new Regex(@".*\bI[A-Z][\w_-]+[$<>]", RegexOptions.Compiled);
+      private readonly Regex UnwrapNullableRegex = new Regex(@"^System.Nullable<(?<typeName>.*)>$");
+      private readonly Regex UnwrapGenericRegex = new Regex(@"^[a-zA-Z0-9_\.-]*<(?<typeName>.*)>$");
+ 
+      private Project GetProjectToScan(string projectNameToFind)
+      {
+            var allProjects = GetProjects(null);
+ 
+            foreach (var project in allProjects)
+            {
+                  if (project.Name.Equals(projectNameToFind, StringComparison.OrdinalIgnoreCase))
+                  {
+                        return project;
+                  }
+            }
+            throw new Exception("Could not find project " + projectNameToFind);
+      }
+ 
+      public IEnumerable<Project> GetProjects(Project rootProject)
+      {
+            IEnumerator enumerator;
+            if (rootProject == null)
+            {
+                  var serviceProvider = (IServiceProvider)Host;
+                  var dte = (DTE)serviceProvider.GetService(typeof (DTE));
+                  enumerator = dte.Solution.Projects.GetEnumerator();
+            }
+            else
+            {
+                  enumerator = rootProject.ProjectItems.GetEnumerator();
+            }
+ 
+            while (enumerator.MoveNext())
+            {
+                  var project = enumerator.Current as Project;
+                  if (project == null)
+                  {
+                        continue;
+                  }
+ 
+                  if (project.Kind == ProjectKinds.vsProjectKindSolutionFolder)
+                  {
+                        foreach (var childProject in GetSolutionFolderProjects(project))
+                        {
+                              yield return childProject;
+                        }
+                  }
+                  else
+                  {
+                        yield return project;
+                  }
+            }
+      }
+ 
+      private static IEnumerable<Project> GetSolutionFolderProjects(Project solutionFolder)
+      {
+            for (var i = 1; i <= solutionFolder.ProjectItems.Count; i++)
+            {
+                  var subProject = solutionFolder.ProjectItems.Item(i).SubProject;
+                  if (subProject == null)
+                  {
+                        continue;
+                  }
+ 
+                  // If this is another solution folder, do a recursive call, otherwise add
+                  if (subProject.Kind == ProjectKinds.vsProjectKindSolutionFolder)
+                  {
+                        foreach (var childProject in GetSolutionFolderProjects(subProject))
+                        {
+                              yield return childProject;
+                        }
+                  }
+                  else
+                  {
+                        yield return subProject;
+                  }
+            }
+      }
+ 
+      private IEnumerable<CodeClass2> GetClasses(ProjectItems projectItems)
+      {
+            foreach (ProjectItem projectItem in projectItems)
+            {
+                  if (projectItem == null) continue;
+ 
+                  if (IsFolder(projectItem))
+                  {
+                        foreach (var childProjectItem in GetClasses(projectItem.ProjectItems))
+                        {
+                              yield return childProjectItem;
+                        }
+                  }
+                  else
+                  {
+                        if (projectItem.FileCodeModel == null) continue;
+                        if (projectItem.FileCodeModel.CodeElements == null) continue;
+ 
+                        foreach (var ns in projectItem.FileCodeModel.CodeElements.OfType<CodeNamespace>())
+                        {
+                              foreach (var codeClass in ns.Members.OfType<CodeClass2>())
+                              {
+                                    if (codeClass == null) continue;
+                                    if (codeClass.IsShared) continue;
+                                    //if (codeClass.Access != vsCMAccess.vsCMAccessPublic) continue;
+ 
+                                    yield return codeClass;
+                              }
+                        }
+                  }
+            }
+      }
+ 
+	 private IEnumerable<CodeEnum> GetEnums(ProjectItems projectItems)
+	{
+			foreach (ProjectItem projectItem in projectItems)
+            {
+                  if (projectItem == null) continue;
+ 
+                  if (IsFolder(projectItem))
+                  {
+                        foreach (var childProjectItem in GetEnums(projectItem.ProjectItems))
+                        {
+                              yield return childProjectItem;
+                        }
+                  }
+                  else
+                  {
+                        if (projectItem.FileCodeModel == null) continue;
+                        if (projectItem.FileCodeModel.CodeElements == null) continue;
+
+	                  var potentialEnums = FindEnum(projectItem.FileCodeModel.CodeElements);
+	                  foreach (var potentialEnum in potentialEnums)
+	                  {
+		                  yield return potentialEnum;
+	                  }
+                  }
+            }
+	}
+
+	private IEnumerable<CodeEnum> FindEnum(CodeElements elements)
+  {
+		foreach (CodeElement element in elements)
+		{
+			var enumeration = element as CodeEnum;
+			if (enumeration != null)
+				yield return enumeration;
+		
+			var enumerations = FindEnum(element.Children);
+			foreach (var e in enumerations)
+			{
+				yield return e;	
+			}
+		}
+	}
+
+	static bool IsFolder(ProjectItem item)
+      {
+            return (item.Kind == Constants.vsProjectItemKindPhysicalFolder);
+      }
+ 
+      private IEnumerable<CodeProperty> GetAllMembersRecursive(CodeClass2 codeClass)
+      {
+            if (codeClass != null)
+            {
+                  foreach (var member in codeClass.Members.OfType<CodeProperty>())
+                  {
+                        yield return member;
+                  }
+ 
+                  var baseClasses = codeClass.Bases.OfType<CodeClass2>();
+                  foreach (var baseClass in baseClasses)
+                  {
+                        var childMembers = GetAllMembersRecursive(baseClass);
+                        foreach (var childMember in childMembers)
+                        {
+                              yield return childMember;
+                        }
+                  }
+            }
+      }
+ 
+      private IEnumerable<CodeProperty> GetMembers(CodeClass2 codeClass)
+      {
+            var allMembers = GetAllMembersRecursive(codeClass).GroupBy(x => x.Name).Select(x => x.First());
+            foreach (var member in allMembers)
+            {
+                  var isInterfaceType = false;
+                  if (member.Type.TypeKind == vsCMTypeRef.vsCMTypeRefCodeType &&
+                      member.Type.CodeType.Kind == vsCMElement.vsCMElementInterface)
+                  {
+                        //HACK: this is to allow usages of IEnumerable, but skip if the generic contains an interface
+                        const string enumerableTypeName = "System.Collections.Generic.IEnumerable<";
+                        if (member.Type.AsFullName.StartsWith(enumerableTypeName, StringComparison.OrdinalIgnoreCase))
+                        {
+                              if (PossibleInterfaceRegex.IsMatch(member.Type.AsFullName, enumerableTypeName.Length))
+                              {
+                                    isInterfaceType = true;
+                              }
+                        }
+                        else
+                        {
+                              isInterfaceType = true;
+                        }
+                  }
+ 
+                  if (member.Access != vsCMAccess.vsCMAccessPublic) continue;
+                  if (isInterfaceType) continue;
+ 
+                  yield return member;
+            }
+      }
+ 
+      private bool IsArray(CodeProperty member)
+      {
+            var unwrappedTypeName = UnwrapTypeName(member.Type);
+            var arrayTypeNames = new[]
+                  {
+                        "System.Array",
+                        "System.Collections."
+                  };
+     
+            return unwrappedTypeName.EndsWith("[]") || arrayTypeNames.Any(unwrappedTypeName.StartsWith);
+      }
+ 
+      private bool IsArray(string typeName)
+      {
+            var arrayTypeNames = new[]
+                  {
+                        "System.Array",
+                        "System.Collections."
+                  };
+     
+            return typeName.EndsWith("[]") || arrayTypeNames.Any(typeName.StartsWith);
+      }
+ 
+      private bool IsBoolean(string typeName)
+      {
+            return "System.Boolean".Equals(typeName);
+      }
+ 
+      private bool IsString(string typeName)
+      {
+            var stringTypeNames = new[]
+                  {
+                        "System.Char",
+                        "System.String",
+                        "System.Guid"
+                  };
+ 
+            return stringTypeNames.Contains(typeName);
+      }
+ 
+      private bool IsNumber(string typeName)
+      {
+            var numericTypeNames = new[]
+                  {
+                        "System.SByte",
+                        "System.Byte",
+                        "byte",
+                        "System.Int16",
+                        "System.UInt16",
+                        "System.Int32",
+                        "System.UInt32",
+                        "System.Int64",
+                        "System.UInt64",
+                        "System.Single",
+                        "System.Double",
+                        "System.Decimal"
+                  };
+ 
+            return numericTypeNames.Contains(typeName);
+      }
+ 
+      private bool IsNullable(CodeTypeRef codeTypeRef)
+    {
+        var codeTypeRef2 = codeTypeRef as CodeTypeRef2;
+        if ((codeTypeRef2 != null) && (codeTypeRef2.IsGeneric))
+        {
+            var match = UnwrapNullableRegex.Match(codeTypeRef.AsFullName);
+              return match.Success;
+        }
+            return false;
+    }
+ 
+    private string UnwrapTypeName(CodeTypeRef codeTypeRef)
+    {
+        var codeTypeRef2 = codeTypeRef as CodeTypeRef2;
+        if ((codeTypeRef2 != null) && (codeTypeRef2.IsGeneric))
+        {
+            var match = UnwrapNullableRegex.Match(codeTypeRef.AsFullName);
+              if (match.Success)
+              {
+                    return match.Groups["typeName"].Value;
+              }
+        }
+        return codeTypeRef.AsFullName;
+    }
+ 
+    private string UnwrapGenericName(CodeTypeRef codeTypeRef)
+    {
+        var codeTypeRef2 = codeTypeRef as CodeTypeRef2;
+        if ((codeTypeRef2 != null) && (codeTypeRef2.IsGeneric))
+        {
+            var match = UnwrapGenericRegex.Match(codeTypeRef.AsFullName);
+              if (match.Success)
+              {
+                    return match.Groups["typeName"].Value;
+              }
+        }
+        return codeTypeRef.AsFullName;
+    }
+#>

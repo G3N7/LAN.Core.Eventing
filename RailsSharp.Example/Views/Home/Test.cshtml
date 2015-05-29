@@ -1,0 +1,23 @@
+﻿@{
+	ViewBag.Title = "Test";
+}
+
+<div ng-controller="TestCtrl">
+
+	<h3>Request/Response</h3>
+	<button class="btn btn-primary" ng-click="inititeSingleRequestAndResponseTest()">Send Request Expecting Single Reply to client.</button>
+	Result: <span class="glyphicon" ng-class="{
+				  'glyphicon-cog': testState.singleRequestAndResponse === 'Unknown',
+				  'text-warning': testState.singleRequestAndResponse === 'Unknown',
+				  'glyphicon-check': testState.singleRequestAndResponse === 'Success',
+				  'text-success': testState.singleRequestAndResponse === 'Success'}"></span>
+
+	@* todo: test: group membership to stalwart group *@
+
+	@* todo: test: group join/leave in flight *@
+
+	@* todo: test: push notifications *@
+
+	@* todo: test: push notifications via WebApi so that it is generated from outside of the framework  *@
+
+</div>

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Security.Authentication;
-using System.Security.Principal;
 using System.Threading.Tasks;
 using LAN.Core.DependencyInjection;
 using LAN.Core.Eventing.Server;

@@ -1,0 +1,37 @@
+﻿<#@ template debug="true" hostspecific="true" language="C#" #>
+<#@ include file="Core.Helpers.tt" #><#+
+		public  static string _toCamelCase(string s)
+      {
+            var camelCaseString = Char.ToLower(s[0]) + s.Substring(1);
+            return camelCaseString;
+      }
+
+	 public string _getTypeScriptTypeName(CodeProperty member)
+      {
+			var unwrappedTypeName = UnwrapTypeName(member.Type);
+            return _getTypeScriptTypeName(unwrappedTypeName);
+      }
+ 
+      public string _getTypeScriptTypeName(string typeName)
+      {
+            if (IsNumber(typeName))
+            {
+                  return "number";
+            }
+            if (IsString(typeName))
+            {
+                  return "string";
+            }
+            if (IsBoolean(typeName))
+            {
+                  return "boolean";
+            }
+            if (IsArray(typeName))
+            {
+				return "any[]";
+            }
+			
+            return "any";
+      }
+
+#>
