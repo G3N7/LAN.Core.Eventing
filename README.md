@@ -15,6 +15,7 @@ Kanban Board
 
 Docs
 ---
+* [Release Notes](https://github.com/G3N7/LAN.Core.Eventing/wiki/Release-Notes)
 * [Setup Dependencies (Composition Root)](https://github.com/G3N7/LAN.Core.Eventing/wiki/Setup-Dependencies-(Composition-Root))
 * [Getting notified when an exception occurs in the hub or in a handler](https://github.com/G3N7/LAN.Core.Eventing/wiki/SignalREventHub.ExceptionOccurred)
 
