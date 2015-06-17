@@ -89,29 +89,29 @@ namespace LAN.Core.Eventing.SignalR
 
 		#region Connect
 
-		public override Task OnConnected()
+		public async override Task OnConnected()
 		{
 			var username = this.Context.User.Identity.Name;
-			if (!this.Context.User.Identity.IsAuthenticated) return base.OnConnected();
-
-			var context = new SignalRConnectionContext(this.Context);
-            try
+			if (this.Context.User.Identity.IsAuthenticated)
 			{
-				var groupsToJoin = this._groupRegistrar.GetGroupsForUser(username, context);
-				foreach (var groupToJoin in groupsToJoin.Result)
+				var context = new SignalRConnectionContext(this.Context);
+				try
 				{
-					this._groupJoinService.JoinToGroup(groupToJoin, this.Context.ConnectionId);
-					Debug.WriteLine("SignalR EventHub: {0} has joined group {1}", username, groupToJoin);
+					var groupsToJoin = await this._groupRegistrar.GetGroupsForUser(username, context);
+					foreach (var groupToJoin in groupsToJoin)
+					{
+						this._groupJoinService.JoinToGroup(groupToJoin, this.Context.ConnectionId);
+						Debug.WriteLine("SignalR EventHub: {0} has joined group {1}", username, groupToJoin);
+					}
+					OnUserConnected(new SignalRUserConnectedEventArgs(this.Context.User, context));
 				}
-				OnUserConnected(new SignalRUserConnectedEventArgs(this.Context.User, context));
+				catch (Exception ex)
+				{
+					OnExceptionOccurred(new SignalRExceptionEventArgs(this.Context.User, ex, context));
+					SendExceptionToClient("Error Joining Groups", ex);
+				}
 			}
-			catch (Exception ex)
-			{
-				OnExceptionOccurred(new SignalRExceptionEventArgs(this.Context.User, ex, context));
-				SendExceptionToClient("Error Joining Groups", ex);
-			}
-
-			return base.OnConnected();
+			await base.OnConnected();
 		}
 
 		/// <summary>
@@ -129,28 +129,29 @@ namespace LAN.Core.Eventing.SignalR
 
 		#region Disconnect
 
-		public override Task OnDisconnected(bool stopCalled)
+		public async override Task OnDisconnected(bool stopCalled)
 		{
 			var username = this.Context.User.Identity.Name;
-			if (!this.Context.User.Identity.IsAuthenticated) return base.OnDisconnected(stopCalled);
-			var context = new SignalRConnectionContext(this.Context);
-			try
+			if (this.Context.User.Identity.IsAuthenticated)
 			{
-				var groupsToLeave = this._groupRegistrar.GetGroupsForUser(username, context);
-				foreach (var groupToJoin in groupsToLeave.Result)
+				var context = new SignalRConnectionContext(this.Context);
+				try
 				{
-					this._groupLeaveService.LeaveGroup(groupToJoin, this.Context.ConnectionId);
-					Debug.WriteLine("SignalR EventHub: {0} has left group {1}", username, groupToJoin);
+					var groupsToLeave = await this._groupRegistrar.GetGroupsForUser(username, context);
+					foreach (var groupToJoin in groupsToLeave)
+					{
+						this._groupLeaveService.LeaveGroup(groupToJoin, this.Context.ConnectionId);
+						Debug.WriteLine("SignalR EventHub: {0} has left group {1}", username, groupToJoin);
+					}
+					OnUserDisconnected(new SignalRUserDisconnectedEventArgs(this.Context.User, context));
 				}
-				OnUserDisconnected(new SignalRUserDisconnectedEventArgs(this.Context.User, context));
+				catch (Exception ex)
+				{
+					OnExceptionOccurred(new SignalRExceptionEventArgs(this.Context.User, ex, context));
+					SendExceptionToClient("Error Leaving Groups", ex);
+				}
 			}
-			catch (Exception ex)
-			{
-				OnExceptionOccurred(new SignalRExceptionEventArgs(this.Context.User, ex, context));
-				SendExceptionToClient("Error Leaving Groups", ex);
-			}
-
-			return base.OnDisconnected(stopCalled);
+			await base.OnDisconnected(stopCalled);
 		}
 
 		/// <summary>
