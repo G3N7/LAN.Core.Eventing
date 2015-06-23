@@ -1,13 +1,7 @@
-var Status = (function () {
-    function Status() {
-    }
-    Status.Unknown = 'Unknown';
-    Status.Success = 'Success';
-    return Status;
-})();
 var TestState = (function () {
     function TestState() {
-        this.singleRequestAndResponse = Status.Unknown;
+        this.singleRequestAndResponse = false;
+        this.requestThatResultsInError = false;
     }
     return TestState;
 })();
@@ -19,7 +13,19 @@ function TestCtrl($scope, eventRegistry) {
     };
     eventRegistry.hook(TestEvents.TestSingleResponse, function (reply) {
         $scope.$apply(function () {
-            $scope.testState.singleRequestAndResponse = Status.Success;
+            $scope.testState.singleRequestAndResponse = true;
+        });
+    });
+    var errorTestRunning = false;
+    $scope.inititeRequestThatResultsInErrorTest = function () {
+        errorTestRunning = true;
+        eventRegistry.raise(TestEvents.TestFailedRequest, {});
+    };
+    eventRegistry.hook(ServerEvents.OnError, function (error) {
+        $scope.$apply(function () {
+            if (errorTestRunning) {
+                $scope.testState.requestThatResultsInError = true;
+            }
         });
     });
 }

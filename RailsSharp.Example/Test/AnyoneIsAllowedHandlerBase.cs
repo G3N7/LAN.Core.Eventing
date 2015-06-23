@@ -3,9 +3,9 @@ using LAN.Core.Eventing;
 
 namespace RailsSharp.Example.Test
 {
-	public abstract class AnyoneIsAllowedHandlerBase : HandlerBase<TestSingleRequest, IPrincipal>
+	public abstract class AnyoneIsAllowedHandlerBase<TRequest> : HandlerBase<TRequest, IPrincipal> where TRequest : RequestBase
 	{
-		protected override bool IsAuthorized(TestSingleRequest request, IPrincipal principal)
+		protected override bool IsAuthorized(TRequest request, IPrincipal principal)
 		{
 			return true;
 		}

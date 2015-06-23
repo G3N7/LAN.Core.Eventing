@@ -213,6 +213,8 @@
     <Compile Include="Startup.cs" />
     <Compile Include="Test\AnyoneIsAllowedHandlerBase.cs" />
     <Compile Include="Test\TestEvents.cs" />
+    <Compile Include="Test\TestFailedHandler.cs" />
+    <Compile Include="Test\TestFailedRequest.cs" />
     <Compile Include="Test\TestSingleHandler.cs" />
     <Compile Include="Test\TestSingleRequest.cs" />
     <Compile Include="Test\TestSingleResponse.cs" />

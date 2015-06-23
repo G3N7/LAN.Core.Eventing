@@ -7,10 +7,20 @@
 	<h3>Request/Response</h3>
 	<button class="btn btn-primary" ng-click="inititeSingleRequestAndResponseTest()">Send Request Expecting Single Reply to client.</button>
 	Result: <span class="glyphicon" ng-class="{
-				  'glyphicon-cog': testState.singleRequestAndResponse === 'Unknown',
-				  'text-warning': testState.singleRequestAndResponse === 'Unknown',
-				  'glyphicon-check': testState.singleRequestAndResponse === 'Success',
-				  'text-success': testState.singleRequestAndResponse === 'Success'}"></span>
+				  'glyphicon-cog': !testState.singleRequestAndResponse,
+				  'text-warning': !testState.singleRequestAndResponse,
+				  'glyphicon-check': testState.singleRequestAndResponse,
+				  'text-success': testState.singleRequestAndResponse}"></span>
+
+	<br />
+	<br />
+
+	<button class="btn btn-primary" ng-click="inititeRequestThatResultsInErrorTest()">Send Request Expecting unhandled exception to get returned to client.</button>
+	Result: <span class="glyphicon" ng-class="{
+				  'glyphicon-cog': !testState.requestThatResultsInError,
+				  'text-warning': !testState.requestThatResultsInError,
+				  'glyphicon-check': testState.requestThatResultsInError,
+				  'text-success': testState.requestThatResultsInError}"></span>
 
 	@* todo: test: group membership to stalwart group *@
 

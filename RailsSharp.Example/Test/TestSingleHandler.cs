@@ -3,7 +3,7 @@ using LAN.Core.Eventing;
 
 namespace RailsSharp.Example.Test
 {
-	public class TestSingleHandler : AnyoneIsAllowedHandlerBase
+	public class TestSingleHandler : AnyoneIsAllowedHandlerBase<TestSingleRequest>
 	{
 		private readonly IMessagingContext _messagingContext;
 

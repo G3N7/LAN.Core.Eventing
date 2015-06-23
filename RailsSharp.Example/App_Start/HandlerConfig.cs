@@ -8,6 +8,7 @@ namespace RailsSharp.Example
 		public static void RegisterHandlers(IHandlerRepository repository)
 		{
 			repository.AddHandler<TestSingleHandler>(TestEvents.TestSingleRequest);
+			repository.AddHandler<TestFailedHandler>(TestEvents.TestFailedRequest);
 		}
 	}
 }

@@ -4,5 +4,13 @@
 	{
 		TestSingleRequest,
 		TestSingleResponse,
+		TestFailedRequest,
+		TestFailedResponse,
+		TestSingleLegacyRequest,
+		TestSingleLegacyResponse,
+		TestDoubleARequest,
+		TestDoubleAResponse,
+		TestDoubleBRequest,
+		TestDoubleBResponse,
 	}
 }
