@@ -1,12 +1,12 @@
-﻿using System.Threading.Tasks;
+﻿using System.Security.Principal;
+using System.Threading.Tasks;
 using LAN.Core.Eventing;
-using LAN.Core.Eventing.SignalR;
 
 namespace RailsSharp.Example
 {
-	internal class GroupRegistrar : ISignalRGroupRegistrar
+	internal class GroupRegistrar : GroupRegistrarBase<GenericPrincipal>
 	{
-		public Task<string[]> GetGroupsForUser(string usersName, IConnectionContext connectionContext)
+		public override Task<string[]> GetGroupsForUser(GenericPrincipal usersName, IConnectionContext connectionContext)
 		{
 			return Task.Factory.StartNew(() => new string[0]);
 		}

@@ -14,7 +14,7 @@ namespace RailsSharp.Example
 			container.RegisterSingleton<IGroupJoinService>(groupService);
 			container.RegisterSingleton<IGroupLeaveService>(groupService);
 			container.RegisterSingleton<IGroupLookupService>(groupService);
-			container.Bind<ISignalRGroupRegistrar, GroupRegistrar>(true);
+			container.Bind<IGroupRegistrar, GroupRegistrar>(true);
 			container.Bind<ISignalRConnectionLookupService, SignalRConnectionLookupService>(true);
 
 			var handlerRepository = new DIHandlerRepository(container);

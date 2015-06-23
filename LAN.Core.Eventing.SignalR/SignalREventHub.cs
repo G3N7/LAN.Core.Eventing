@@ -15,7 +15,7 @@ namespace LAN.Core.Eventing.SignalR
 	{
 		private readonly IMessagingContext _messagingContext;
 		private readonly IHandlerRepository _handlerRepository;
-		private readonly ISignalRGroupRegistrar _groupRegistrar;
+		private readonly IGroupRegistrar _groupRegistrar;
 		private readonly IGroupJoinService _groupJoinService;
 		private readonly IGroupLeaveService _groupLeaveService;
 
@@ -25,7 +25,7 @@ namespace LAN.Core.Eventing.SignalR
 			var container = ContainerRegistry.DefaultContainer;
 			this._handlerRepository = container.GetInstance<IHandlerRepository>();
 			this._messagingContext = container.GetInstance<IMessagingContext>();
-			this._groupRegistrar = container.GetInstance<ISignalRGroupRegistrar>();
+			this._groupRegistrar = container.GetInstance<IGroupRegistrar>();
 			this._groupJoinService = container.GetInstance<IGroupJoinService>();
 			this._groupLeaveService = container.GetInstance<IGroupLeaveService>();
 		}
@@ -91,17 +91,16 @@ namespace LAN.Core.Eventing.SignalR
 
 		public async override Task OnConnected()
 		{
-			var username = this.Context.User.Identity.Name;
 			if (this.Context.User.Identity.IsAuthenticated)
 			{
 				var context = new SignalRConnectionContext(this.Context);
 				try
 				{
-					var groupsToJoin = await this._groupRegistrar.GetGroupsForUser(username, context);
+					var groupsToJoin = await this._groupRegistrar.GetGroupsForUser(this.Context.User, context);
 					foreach (var groupToJoin in groupsToJoin)
 					{
 						this._groupJoinService.JoinToGroup(groupToJoin, this.Context.ConnectionId);
-						Debug.WriteLine("SignalR EventHub: {0} has joined group {1}", username, groupToJoin);
+						Debug.WriteLine("SignalR EventHub: {0} has joined group {1}", this.Context.User.Identity.Name, groupToJoin);
 					}
 					OnUserConnected(new SignalRUserConnectedEventArgs(this.Context.User, context));
 				}
@@ -131,17 +130,16 @@ namespace LAN.Core.Eventing.SignalR
 
 		public async override Task OnDisconnected(bool stopCalled)
 		{
-			var username = this.Context.User.Identity.Name;
 			if (this.Context.User.Identity.IsAuthenticated)
 			{
 				var context = new SignalRConnectionContext(this.Context);
 				try
 				{
-					var groupsToLeave = await this._groupRegistrar.GetGroupsForUser(username, context);
+					var groupsToLeave = await this._groupRegistrar.GetGroupsForUser(this.Context.User, context);
 					foreach (var groupToJoin in groupsToLeave)
 					{
 						this._groupLeaveService.LeaveGroup(groupToJoin, this.Context.ConnectionId);
-						Debug.WriteLine("SignalR EventHub: {0} has left group {1}", username, groupToJoin);
+						Debug.WriteLine("SignalR EventHub: {0} has left group {1}", this.Context.User.Identity.Name, groupToJoin);
 					}
 					OnUserDisconnected(new SignalRUserDisconnectedEventArgs(this.Context.User, context));
 				}

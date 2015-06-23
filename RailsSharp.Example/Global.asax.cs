@@ -27,7 +27,7 @@ namespace RailsSharp.Example
 	        var handlerRepository = CompositionConfig.ConfigureApp(container);
 			HandlerConfig.RegisterHandlers(handlerRepository);
 	        var thing = container.GetInstance<ISignalRConnectionLookupService>();
-			var thing1 = container.GetInstance<ISignalRGroupRegistrar>();
+			var thing1 = container.GetInstance<IGroupRegistrar>();
 			var thing2 = container.GetInstance<IGroupLookupService>();
 			var thing3 = container.GetInstance<IGroupLeaveService>();
 			var thing4 = container.GetInstance<IGroupJoinService>();

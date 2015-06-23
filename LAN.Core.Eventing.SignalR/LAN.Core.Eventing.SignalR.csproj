@@ -75,7 +75,6 @@
     <Compile Include="ThreadSafeStringLookup.cs" />
     <Compile Include="DIHandlerRepository.cs" />
     <Compile Include="ISignalRConnectionLookupService.cs" />
-    <Compile Include="ISignalRGroupRegistrar.cs" />
     <Compile Include="ISignalRSerializer.cs" />
     <Compile Include="CamelCaseSignalRSerializer.cs" />
     <Compile Include="SignalRConnectionLookupService.cs" />

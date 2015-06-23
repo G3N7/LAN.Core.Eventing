@@ -85,10 +85,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="EventName.cs" />
+    <Compile Include="GroupRegistrarBase.cs" />
     <Compile Include="HandlerBase.cs" />
     <Compile Include="IGroupLookupService.cs" />
     <Compile Include="IGroupJoinService.cs" />
     <Compile Include="IGroupLeaveService.cs" />
+    <Compile Include="IGroupRegistrar.cs" />
     <Compile Include="IHandler.cs" />
     <Compile Include="IHandlerRepository.cs" />
     <Compile Include="IMessagingContext.cs" />
