@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics.Contracts;
 using System.Security.Principal;
+using System.Threading.Tasks;
 
 namespace LAN.Core.Eventing
 {
@@ -8,8 +9,8 @@ namespace LAN.Core.Eventing
 	public interface IHandler
 	{
 		Type GetRequestType();
-		void Invoke(RequestBase req, IPrincipal principal);
-		bool IsAuthorized(RequestBase req, IPrincipal principal);
+		Task Invoke(RequestBase req, IPrincipal principal);
+		Task<bool> IsAuthorized(RequestBase req, IPrincipal principal);
 	}
 
 	[ContractClassFor(typeof(IHandler))]
@@ -21,7 +22,7 @@ namespace LAN.Core.Eventing
 			throw new NotImplementedException();
 		}
 
-		void IHandler.Invoke(RequestBase req, IPrincipal principal)
+		Task IHandler.Invoke(RequestBase req, IPrincipal principal)
 		{
 			Contract.Requires(req != null);
 			Contract.Requires(principal != null);
@@ -29,7 +30,7 @@ namespace LAN.Core.Eventing
 		}
 
 
-		bool IHandler.IsAuthorized(RequestBase req, IPrincipal principal)
+		Task<bool> IHandler.IsAuthorized(RequestBase req, IPrincipal principal)
 		{
 			Contract.Requires(req != null);
 			Contract.Requires(principal != null);

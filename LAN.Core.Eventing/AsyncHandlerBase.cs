@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace LAN.Core.Eventing
 {
-	public abstract class HandlerBase<TReq, TPrincipal> : IHandler
+	public abstract class AsyncHandlerBase<TReq, TPrincipal> : IHandler
 		where TReq : RequestBase
 		where TPrincipal : IPrincipal
 	{
@@ -16,15 +16,15 @@ namespace LAN.Core.Eventing
 
 		public Task Invoke(RequestBase req, IPrincipal principal)
 		{
-			return Task.Run(() => this.Invoke((TReq)req, (TPrincipal)principal));
+			return this.Invoke((TReq)req, (TPrincipal)principal);
 		}
 
 		public Task<bool> IsAuthorized(RequestBase req, IPrincipal principal)
 		{
-			return Task.Run(() => this.IsAuthorized((TReq) req, (TPrincipal) principal));
+			return this.IsAuthorized((TReq)req, (TPrincipal)principal);
 		}
 
-		protected abstract bool IsAuthorized(TReq request, TPrincipal principal);
-		protected abstract void Invoke(TReq request, TPrincipal principal);
+		protected abstract Task<bool> IsAuthorized(TReq request, TPrincipal principal);
+		protected abstract Task Invoke(TReq request, TPrincipal principal);
 	}
 }

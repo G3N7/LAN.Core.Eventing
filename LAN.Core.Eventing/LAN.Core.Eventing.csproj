@@ -84,6 +84,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AsyncHandlerBase.cs" />
     <Compile Include="EventName.cs" />
     <Compile Include="GroupRegistrarBase.cs" />
     <Compile Include="HandlerBase.cs" />

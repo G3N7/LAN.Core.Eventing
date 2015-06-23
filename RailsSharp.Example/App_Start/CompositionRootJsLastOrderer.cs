@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web.Optimization;
 
-namespace Smokey.Web
+namespace RailsSharp.Example
 {
 	public class CompositionRootJsLastOrderer : IBundleOrderer
 	{

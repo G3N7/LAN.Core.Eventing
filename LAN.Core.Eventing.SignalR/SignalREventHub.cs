@@ -34,7 +34,7 @@ namespace LAN.Core.Eventing.SignalR
 
 		[HubMethodName("raiseEvent")]
 		// ReSharper disable once UnusedMember.Global
-		public void RaiseEvent(string eventName, JObject data)
+		public async Task RaiseEvent(string eventName, JObject data)
 		{
 			try
 			{
@@ -53,19 +53,16 @@ namespace LAN.Core.Eventing.SignalR
 				deserializedRequest.ConnectionContext = context;
 				
 				OnEventRaisedFromClient(new SignalREventRaisedFromClientEventArgs(eventName, deserializedRequest, context));
+				Debug.WriteLine("SignalR EventHub: {0} has raised {1} event", this.Context.User.Identity.Name, eventName);
 
-				if (!handler.IsAuthorized(deserializedRequest, this.Context.User))
+				if (!await handler.IsAuthorized(deserializedRequest, this.Context.User))
 				{
 					var errorMessage = string.Format("Auth: You are not authorized to use the event {0}.", eventName);
 					SendErrorToClient(errorMessage);
 					throw new AuthenticationException(errorMessage);
 				}
 
-				var eventTask = new Task(() => handler.Invoke(deserializedRequest, this.Context.User));
-				eventTask.ContinueWith(HandleErrorForAsyncHandler, TaskContinuationOptions.OnlyOnFaulted);
-				eventTask.Start();
-
-				Debug.WriteLine("SignalR EventHub: {0} has raised {1} event", this.Context.User.Identity.Name, eventName);
+				await handler.Invoke(deserializedRequest, this.Context.User);
 			}
 			catch (Exception ex)
 			{
@@ -181,15 +178,6 @@ namespace LAN.Core.Eventing.SignalR
 		{
 			var handler = ExceptionOccurred;
 			if (handler != null) handler.Invoke(null, e);
-		}
-
-		private void HandleErrorForAsyncHandler(Task handlerTask)
-		{
-			if (handlerTask.Exception == null) return; //this should never happen, since this will only be used for faulted tasks
-
-			var exception = handlerTask.Exception.GetBaseException();
-			OnExceptionOccurred(new SignalRExceptionEventArgs(this.Context.User, exception, new SignalRConnectionContext(this.Context)));
-			SendExceptionToClient("Handler Exception", exception);
 		}
 
 		private void SendExceptionToClient(string baseMessage, Exception ex)

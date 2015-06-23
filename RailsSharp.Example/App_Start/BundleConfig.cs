@@ -1,5 +1,4 @@
 ﻿using System.Web.Optimization;
-using Smokey.Web;
 
 namespace RailsSharp.Example
 {
