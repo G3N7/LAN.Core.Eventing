@@ -70,6 +70,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="IEventHubClient.cs" />
     <Compile Include="SignalRConnectionContext.cs" />
     <Compile Include="SignalREventRaisedFromClientEventArgs.cs" />
     <Compile Include="ThreadSafeStringLookup.cs" />

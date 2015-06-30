@@ -11,7 +11,7 @@ using Newtonsoft.Json.Linq;
 namespace LAN.Core.Eventing.SignalR
 {
 	[HubName("eventHub")]
-	public class SignalREventHub : Hub
+	public class SignalREventHub : Hub<IEventHubClient>
 	{
 		private readonly IMessagingContext _messagingContext;
 		private readonly IHandlerRepository _handlerRepository;
