@@ -17,6 +17,10 @@
 					
 		static TestFailedResponse : string = 'TestTestFailedResponse';
 					
+		static TestUnauthorizedRequest : string = 'TestTestUnauthorizedRequest';
+					
+		static TestUnauthorizedResponse : string = 'TestTestUnauthorizedResponse';
+					
 		static TestSingleLegacyRequest : string = 'TestTestSingleLegacyRequest';
 					
 		static TestSingleLegacyResponse : string = 'TestTestSingleLegacyResponse';

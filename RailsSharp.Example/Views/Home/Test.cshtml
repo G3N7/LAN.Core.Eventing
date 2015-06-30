@@ -21,6 +21,16 @@
 				  'text-warning': !testState.requestThatResultsInError,
 				  'glyphicon-check': testState.requestThatResultsInError,
 				  'text-success': testState.requestThatResultsInError}"></span>
+	
+	<br />
+	<br />
+
+	<button class="btn btn-primary" ng-click="inititeRequestThatResultsInUnauthorizedErrorTest()">Send Request Expecting Not Authorized Exception to get returned to client.</button>
+	Result: <span class="glyphicon" ng-class="{
+				  'glyphicon-cog': !testState.requestThatResultsInUnauthorizedError,
+				  'text-warning': !testState.requestThatResultsInUnauthorizedError,
+				  'glyphicon-check': testState.requestThatResultsInUnauthorizedError,
+				  'text-success': testState.requestThatResultsInUnauthorizedError}"></span>
 
 	@* todo: test: group membership to stalwart group *@
 

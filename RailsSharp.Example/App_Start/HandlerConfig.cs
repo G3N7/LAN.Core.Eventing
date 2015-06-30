@@ -9,6 +9,7 @@ namespace RailsSharp.Example
 		{
 			repository.AddHandler<TestSingleHandler>(TestEvents.TestSingleRequest);
 			repository.AddHandler<TestFailedHandler>(TestEvents.TestFailedRequest);
+			repository.AddHandler<TestUnauthorizedHandler>(TestEvents.TestUnauthorizedRequest);
 		}
 	}
 }

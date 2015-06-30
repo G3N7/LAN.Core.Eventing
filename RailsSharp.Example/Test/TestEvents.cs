@@ -6,6 +6,8 @@
 		TestSingleResponse,
 		TestFailedRequest,
 		TestFailedResponse,
+		TestUnauthorizedRequest,
+		TestUnauthorizedResponse,
 		TestSingleLegacyRequest,
 		TestSingleLegacyResponse,
 		TestDoubleARequest,
