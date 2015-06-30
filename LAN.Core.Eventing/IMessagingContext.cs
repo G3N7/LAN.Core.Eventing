@@ -1,64 +1,71 @@
 using System.Diagnostics.Contracts;
+using System.Threading.Tasks;
 
 namespace LAN.Core.Eventing
 {
 	[ContractClass(typeof(ContractMessagingContext))]
 	public interface IMessagingContext
 	{
-		void PublishToClient(EventName name, ResponseBase response);
-		void PublishToAll(EventName name, ResponseBase response);
-		void PublishToGroup(string groupName, EventName name, ResponseBase response);
-		void PublishToGroups(string[] groupNames, EventName name, ResponseBase response);
-		void PushToGroup(string groupName, EventName name, PushBase pushMessage);
-		void PushToGroups(string[] groupNames, EventName name, PushBase pushMessage);
+		Task PublishToClient(EventName name, ResponseBase response);
+		Task PublishToAll(EventName name, ResponseBase response);
+		Task PublishToGroup(string groupName, EventName name, ResponseBase response);
+		Task PublishToGroups(string[] groupNames, EventName name, ResponseBase response);
+		Task PushToGroup(string groupName, EventName name, PushBase pushMessage);
+		Task PushToGroups(string[] groupNames, EventName name, PushBase pushMessage);
 	}
 
 	[ContractClassFor(typeof(IMessagingContext))]
 	abstract class ContractMessagingContext : IMessagingContext
 	{
-		void IMessagingContext.PublishToClient(EventName name, ResponseBase response)
+		Task IMessagingContext.PublishToClient(EventName name, ResponseBase response)
 		{
 			Contract.Requires(name != null);
 			Contract.Requires(response != null);
+			Contract.Ensures(Contract.Result<Task>() != null);
 			throw new System.NotImplementedException();
 		}
 
-		void IMessagingContext.PublishToAll(EventName name, ResponseBase response)
+		Task IMessagingContext.PublishToAll(EventName name, ResponseBase response)
 		{
 			Contract.Requires(name != null);
 			Contract.Requires(response != null);
+			Contract.Ensures(Contract.Result<Task>() != null);
 			throw new System.NotImplementedException();
 		}
 
-		void IMessagingContext.PublishToGroup(string groupName, EventName name, ResponseBase response)
+		Task IMessagingContext.PublishToGroup(string groupName, EventName name, ResponseBase response)
 		{
 			Contract.Requires(groupName != null);
 			Contract.Requires(name != null);
 			Contract.Requires(response != null);
+			Contract.Ensures(Contract.Result<Task>() != null);
 			throw new System.NotImplementedException();
 		}
 
-		void IMessagingContext.PublishToGroups(string[] groupNames, EventName name, ResponseBase response)
+		Task IMessagingContext.PublishToGroups(string[] groupNames, EventName name, ResponseBase response)
 		{
 			Contract.Requires(groupNames != null);
 			Contract.Requires(name != null);
 			Contract.Requires(response != null);
+			Contract.Ensures(Contract.Result<Task>() != null);
 			throw new System.NotImplementedException();
 		}
 
-		public void PushToGroup(string groupName, EventName name, PushBase pushMessage)
+		Task IMessagingContext.PushToGroup(string groupName, EventName name, PushBase pushMessage)
 		{
 			Contract.Requires(groupName != null);
 			Contract.Requires(name != null);
 			Contract.Requires(pushMessage != null);
+			Contract.Ensures(Contract.Result<Task>() != null);
 			throw new System.NotImplementedException();
 		}
 
-		public void PushToGroups(string[] groupNames, EventName name, PushBase pushMessage)
+		Task IMessagingContext.PushToGroups(string[] groupNames, EventName name, PushBase pushMessage)
 		{
 			Contract.Requires(groupNames != null);
 			Contract.Requires(name != null);
 			Contract.Requires(pushMessage != null);
+			Contract.Ensures(Contract.Result<Task>() != null);
 			throw new System.NotImplementedException();
 		}
 	}

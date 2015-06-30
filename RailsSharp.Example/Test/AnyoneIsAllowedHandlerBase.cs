@@ -1,13 +1,14 @@
 ﻿using System.Security.Principal;
+using System.Threading.Tasks;
 using LAN.Core.Eventing;
 
 namespace RailsSharp.Example.Test
 {
-	public abstract class AnyoneIsAllowedHandlerBase<TRequest> : HandlerBase<TRequest, IPrincipal> where TRequest : RequestBase
+	public abstract class AnyoneIsAllowedHandlerBase<TRequest> : AsyncHandlerBase<TRequest, IPrincipal> where TRequest : RequestBase
 	{
-		protected override bool IsAuthorized(TRequest request, IPrincipal principal)
+		protected override Task<bool> IsAuthorized(TRequest request, IPrincipal principal)
 		{
-			return true;
+			return Task.FromResult(true);
 		}
 	}
 }

@@ -1,4 +1,5 @@
 ﻿using System.Security.Principal;
+using System.Threading.Tasks;
 using LAN.Core.Eventing;
 
 namespace RailsSharp.Example.Test
@@ -12,9 +13,9 @@ namespace RailsSharp.Example.Test
 			_messagingContext = messagingContext;
 		}
 
-		protected override void Invoke(TestSingleRequest request, IPrincipal principal)
+		protected async override Task Invoke(TestSingleRequest request, IPrincipal principal)
 		{
-			_messagingContext.PublishToClient(TestEvents.TestSingleResponse, new TestSingleResponse(request));
+			await _messagingContext.PublishToClient(TestEvents.TestSingleResponse, new TestSingleResponse(request));
 		}
 	}
 }

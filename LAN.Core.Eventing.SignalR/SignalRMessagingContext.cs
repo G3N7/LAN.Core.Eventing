@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using Microsoft.AspNet.SignalR;
 
 namespace LAN.Core.Eventing.SignalR
@@ -11,40 +12,64 @@ namespace LAN.Core.Eventing.SignalR
 			_signalRSerializer = signalRSerializer;
 		}
 
-		public void PublishToClient(EventName name, ResponseBase response)
+		public Task PublishToClient(EventName name, ResponseBase response)
 		{
-			var context = GlobalHost.ConnectionManager.GetHubContext<SignalREventHub>();
-			context.Clients.Client(response.CorrelationId).eventReceived(name.ToString(), _signalRSerializer.Serialize(response));
+			return Task.Factory.StartNew(() =>
+				{
+					var context = GlobalHost.ConnectionManager.GetHubContext<SignalREventHub>();
+					context.Clients.Client(response.CorrelationId).eventReceived(name.ToString(), _signalRSerializer.Serialize(response));
+				}
+			);
 		}
 
-		public void PublishToAll(EventName name, ResponseBase response)
+		public Task PublishToAll(EventName name, ResponseBase response)
 		{
-			var context = GlobalHost.ConnectionManager.GetHubContext<SignalREventHub>();
-			context.Clients.All.eventReceived(name.ToString(), _signalRSerializer.Serialize(response));
+			return Task.Factory.StartNew(() =>
+				{
+					var context = GlobalHost.ConnectionManager.GetHubContext<SignalREventHub>();
+					context.Clients.All.eventReceived(name.ToString(), _signalRSerializer.Serialize(response));
+				}
+			);
 		}
 
-		public void PublishToGroup(string groupName, EventName name, ResponseBase response)
+		public Task PublishToGroup(string groupName, EventName name, ResponseBase response)
 		{
-			var context = GlobalHost.ConnectionManager.GetHubContext<SignalREventHub>();
-			context.Clients.Group(groupName, response.CorrelationId).eventReceived(name.ToString(), _signalRSerializer.Serialize(response));
+			return Task.Factory.StartNew(() =>
+				{
+					var context = GlobalHost.ConnectionManager.GetHubContext<SignalREventHub>();
+					context.Clients.Group(groupName, response.CorrelationId).eventReceived(name.ToString(), _signalRSerializer.Serialize(response));
+				}
+			);
 		}
 
-		public void PublishToGroups(string[] groupNames, EventName name, ResponseBase response)
+		public Task PublishToGroups(string[] groupNames, EventName name, ResponseBase response)
 		{
-			var context = GlobalHost.ConnectionManager.GetHubContext<SignalREventHub>();
-			context.Clients.Groups(groupNames, response.CorrelationId).eventReceived(name.ToString(), _signalRSerializer.Serialize(response));
+			return Task.Factory.StartNew(() =>
+				{
+					var context = GlobalHost.ConnectionManager.GetHubContext<SignalREventHub>();
+					context.Clients.Groups(groupNames, response.CorrelationId).eventReceived(name.ToString(), _signalRSerializer.Serialize(response));
+				}
+			);
 		}
 
-		public void PushToGroup(string groupName, EventName name, PushBase pushMessage)
+		public Task PushToGroup(string groupName, EventName name, PushBase pushMessage)
 		{
-			var context = GlobalHost.ConnectionManager.GetHubContext<SignalREventHub>();
-			context.Clients.Group(groupName).eventReceived(name.ToString(), _signalRSerializer.Serialize(pushMessage));
+			return Task.Factory.StartNew(() =>
+				{
+					var context = GlobalHost.ConnectionManager.GetHubContext<SignalREventHub>();
+					context.Clients.Group(groupName).eventReceived(name.ToString(), _signalRSerializer.Serialize(pushMessage));
+				}
+			);
 		}
 
-		public void PushToGroups(string[] groupNames, EventName name, PushBase pushMessage)
+		public Task PushToGroups(string[] groupNames, EventName name, PushBase pushMessage)
 		{
-			var context = GlobalHost.ConnectionManager.GetHubContext<SignalREventHub>();
-			context.Clients.Groups(groupNames).eventReceived(name.ToString(), _signalRSerializer.Serialize(pushMessage));
+			return Task.Factory.StartNew(() =>
+				{
+					var context = GlobalHost.ConnectionManager.GetHubContext<SignalREventHub>();
+					context.Clients.Groups(groupNames).eventReceived(name.ToString(), _signalRSerializer.Serialize(pushMessage));
+				}
+			);
 		}
 	}
 }
