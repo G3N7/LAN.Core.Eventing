@@ -66,7 +66,7 @@ namespace LAN.Core.Eventing.SignalR
 			}
 			catch (Exception ex)
 			{
-				OnExceptionOccurred(new SignalRExceptionEventArgs(this.Context.User, ex, new SignalRConnectionContext(this.Context)));
+				OnExceptionOccurred(new SignalRExceptionEventArgs(this.Context.User, ex, new SignalRConnectionContext(this.Context), eventName));
 				SendExceptionToClient("An unknown error has occurred", ex);
 			}
 		}
@@ -103,7 +103,7 @@ namespace LAN.Core.Eventing.SignalR
 				}
 				catch (Exception ex)
 				{
-					OnExceptionOccurred(new SignalRExceptionEventArgs(this.Context.User, ex, context));
+					OnExceptionOccurred(new SignalRExceptionEventArgs(this.Context.User, ex, context, "OnConnected"));
 					SendExceptionToClient("Error Joining Groups", ex);
 				}
 			}
@@ -142,7 +142,7 @@ namespace LAN.Core.Eventing.SignalR
 				}
 				catch (Exception ex)
 				{
-					OnExceptionOccurred(new SignalRExceptionEventArgs(this.Context.User, ex, context));
+					OnExceptionOccurred(new SignalRExceptionEventArgs(this.Context.User, ex, context, "OnDisconnected"));
 					SendExceptionToClient("Error Leaving Groups", ex);
 				}
 			}
