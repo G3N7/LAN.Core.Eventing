@@ -5,7 +5,12 @@ namespace LAN.Core.Eventing
 	[ContractClass(typeof (GroupLeaveServiceContract))]
 	public interface IGroupLeaveService
 	{
-		void LeaveGroup(string groupToLeave, string uniqueId);
+		/// <summary>
+		/// Used to leave a group in flight.  You can add registrations using (<see cref="IGroupJoinService.JoinToGroup"/>).
+		/// </summary>
+		/// <param name="groupToLeave">A unique name for the group to leave.</param>
+		/// <param name="connectionId">The id of the connection that should no longer recieve messages from the group.</param>
+		void LeaveGroup(string groupToLeave, string connectionId);
 	}
 
 	[ContractClassFor(typeof (IGroupLeaveService))]
