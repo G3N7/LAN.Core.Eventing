@@ -24,7 +24,19 @@ namespace LAN.Core.Eventing
 			return Task.Run(() => this.IsAuthorized((TReq) req, (TPrincipal) principal));
 		}
 
+		/// <summary>
+		/// Will be called upon invocation of the interface's method, to provide easy casting and type safety.
+		/// </summary>
+		/// <param name="request">A cast version of the <see cref="IHandler.IsAuthorized"/>'s <see cref="RequestBase"/>, that disabiguates <see cref="RequestBase"/> to be specifically <see cref="TReq"/> at compile time.</param>
+		/// <param name="principal">A cast version of the <see cref="IHandler.IsAuthorized"/>'s <see cref="IPrincipal"/>, that disabiguates <see cref="IPrincipal"/> to be specifically <see cref="TPrincipal"/> at compile time.</param>
+		/// <returns>The result of the user's authorization for this Request.</returns>
 		protected abstract bool IsAuthorized(TReq request, TPrincipal principal);
+
+		/// <summary>
+		/// Will be called upon invocation of the interface's method, to provide easy casting and type safety.
+		/// </summary>
+		/// <param name="request">A cast version of the <see cref="IHandler.Invoke"/>'s <see cref="RequestBase"/>, that disabiguates <see cref="RequestBase"/> to be specifically <see cref="TReq"/> at compile time.</param>
+		/// <param name="principal">A cast version of the <see cref="IHandler.Invoke"/>'s <see cref="IPrincipal"/>, that disabiguates <see cref="IPrincipal"/> to be specifically <see cref="TPrincipal"/> at compile time.</param>
 		protected abstract void Invoke(TReq request, TPrincipal principal);
 	}
 }
