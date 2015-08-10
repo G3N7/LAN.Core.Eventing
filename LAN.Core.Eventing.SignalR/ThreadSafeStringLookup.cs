@@ -14,10 +14,7 @@ namespace LAN.Core.Eventing.SignalR
 
 		private readonly object _lock;
 		private readonly List<string> _strings;
-		public IEnumerable<string> Strings
-		{
-			get { return _strings.AsEnumerable(); }
-		}
+		public IEnumerable<string> Strings => _strings.AsEnumerable();
 
 		public void AddConnectionId(string connectionId)
 		{

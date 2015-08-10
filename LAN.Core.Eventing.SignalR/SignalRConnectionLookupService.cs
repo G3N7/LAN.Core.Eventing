@@ -6,7 +6,7 @@ namespace LAN.Core.Eventing.SignalR
 {
 	public class SignalRConnectionLookupService : ISignalRConnectionLookupService
 	{
-		protected static ConcurrentDictionary<string, ThreadSafeStringLookup> ConnectionLookups { get; private set; }
+		protected static ConcurrentDictionary<string, ThreadSafeStringLookup> ConnectionLookups { get; }
 		static SignalRConnectionLookupService()
 		{
 			ConnectionLookups = new ConcurrentDictionary<string, ThreadSafeStringLookup>();

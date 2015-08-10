@@ -12,7 +12,7 @@ namespace LAN.Core.Eventing.SignalR
 		{
 			Contract.Requires(context != null);
 
-			if (context == null) throw new ArgumentNullException("context");
+			if (context == null) throw new ArgumentNullException(nameof(context));
 
 			Contract.Ensures(QueryString != null);
 			

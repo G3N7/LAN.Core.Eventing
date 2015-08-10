@@ -8,7 +8,7 @@ namespace LAN.Core.Eventing
 		{
 			Contract.Requires(request != null);
 			Contract.Ensures(this.CorrelationId != null);
-			this.CorrelationId = request != null && request.ConnectionContext != null ? request.ConnectionContext.CorrelationId : string.Empty;
+			CorrelationId = request.ConnectionContext != null ? request.ConnectionContext.CorrelationId : string.Empty;
 		}
 		public string CorrelationId { get; set; }
 	}
