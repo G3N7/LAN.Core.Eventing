@@ -24,6 +24,7 @@ $provide.value("$locale", {
       "p.e.r.",
       "e.r."
     ],
+    "FIRSTDAYOFWEEK": 0,
     "MONTH": [
       "janar",
       "shkurt",
@@ -60,6 +61,24 @@ $provide.value("$locale", {
       "Tet",
       "N\u00ebn",
       "Dhj"
+    ],
+    "STANDALONEMONTH": [
+      "Janar",
+      "Shkurt",
+      "Mars",
+      "Prill",
+      "Maj",
+      "Qershor",
+      "Korrik",
+      "Gusht",
+      "Shtator",
+      "Tetor",
+      "N\u00ebntor",
+      "Dhjetor"
+    ],
+    "WEEKENDRANGE": [
+      5,
+      6
     ],
     "fullDate": "EEEE, d MMMM y",
     "longDate": "d MMMM y",
@@ -100,6 +119,7 @@ $provide.value("$locale", {
     ]
   },
   "id": "sq-al",
+  "localeID": "sq_AL",
   "pluralCat": function(n, opt_precision) {  if (n == 1) {    return PLURAL_CATEGORY.ONE;  }  return PLURAL_CATEGORY.OTHER;}
 });
 }]);

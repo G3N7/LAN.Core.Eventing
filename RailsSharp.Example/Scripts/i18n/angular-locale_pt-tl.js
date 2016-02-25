@@ -24,6 +24,7 @@ $provide.value("$locale", {
       "a.C.",
       "d.C."
     ],
+    "FIRSTDAYOFWEEK": 0,
     "MONTH": [
       "janeiro",
       "fevereiro",
@@ -60,6 +61,24 @@ $provide.value("$locale", {
       "out",
       "nov",
       "dez"
+    ],
+    "STANDALONEMONTH": [
+      "janeiro",
+      "fevereiro",
+      "mar\u00e7o",
+      "abril",
+      "maio",
+      "junho",
+      "julho",
+      "agosto",
+      "setembro",
+      "outubro",
+      "novembro",
+      "dezembro"
+    ],
+    "WEEKENDRANGE": [
+      5,
+      6
     ],
     "fullDate": "EEEE, d 'de' MMMM 'de' y",
     "longDate": "d 'de' MMMM 'de' y",
@@ -100,6 +119,7 @@ $provide.value("$locale", {
     ]
   },
   "id": "pt-tl",
+  "localeID": "pt_TL",
   "pluralCat": function(n, opt_precision) {  if (n >= 0 && n <= 2 && n != 2) {    return PLURAL_CATEGORY.ONE;  }  return PLURAL_CATEGORY.OTHER;}
 });
 }]);
