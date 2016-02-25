@@ -12,9 +12,7 @@
     };
     eventRegistry.register(ServerEvents);
     eventRegistry.register(TestEvents);
-    app.factory('eventRegistry', function () {
-        return eventRegistry;
-    });
+    app.factory('eventRegistry', function () { return eventRegistry; });
     app.controller('TestCtrl', TestCtrl);
 })();
 //# sourceMappingURL=CompositionRoot.js.map
