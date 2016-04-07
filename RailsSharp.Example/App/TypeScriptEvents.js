@@ -14,7 +14,7 @@ var TestEvents = (function () {
     TestEvents.TestDoubleBRequest = 'TestTestDoubleBRequest';
     TestEvents.TestDoubleBResponse = 'TestTestDoubleBResponse';
     return TestEvents;
-}());
+})();
 var ServerEvents = {
     OnError: "ServerOnError",
     OnWarn: "ServerOnWarn",

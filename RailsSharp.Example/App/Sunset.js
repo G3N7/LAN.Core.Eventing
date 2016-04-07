@@ -20,7 +20,7 @@ var Str = (function () {
         });
     };
     return Str;
-}());
+})();
 var DAL;
 (function (DAL) {
     var BaseExternalInvoker = (function () {
@@ -41,7 +41,7 @@ var DAL;
             };
         }
         return BaseExternalInvoker;
-    }());
+    })();
     DAL.BaseExternalInvoker = BaseExternalInvoker;
     var SignalRExternalInvoker = (function (_super) {
         __extends(SignalRExternalInvoker, _super);
@@ -125,13 +125,13 @@ var DAL;
             };
         }
         return SignalRExternalInvoker;
-    }(BaseExternalInvoker));
+    })(BaseExternalInvoker);
     DAL.SignalRExternalInvoker = SignalRExternalInvoker;
     var QueueItem = (function () {
         function QueueItem() {
         }
         return QueueItem;
-    }());
+    })();
 })(DAL || (DAL = {}));
 var DateTime = (function () {
     function DateTime() {
@@ -156,5 +156,5 @@ var DateTime = (function () {
         return strDateTime;
     };
     return DateTime;
-}());
+})();
 //# sourceMappingURL=Sunset.js.map
