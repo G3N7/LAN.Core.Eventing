@@ -4,7 +4,7 @@ var TestState = (function () {
         this.requestThatResultsInError = false;
     }
     return TestState;
-})();
+}());
 // ReSharper disable once InconsistentNaming
 function TestCtrl($scope, eventRegistry) {
     $scope.testState = new TestState();
